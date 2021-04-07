@@ -1,0 +1,19 @@
+{
+  "name": "licensechallenge",
+  "version": "1.0.0",
+  "description": "kit swEngineering 4-1 project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rlawldud335/license_challenge.git"
+  },
+  "author": "KimJiyeong <rlawldud335@naver.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rlawldud335/license_challenge/issues"
+  },
+  "homepage": "https://github.com/rlawldud335/license_challenge#readme"
+}
