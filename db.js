@@ -7,6 +7,11 @@ dotenv.config();
 //mysql connection
 const mysqlConfig = JSON.parse(process.env.MYSQLCONN);
 const mysqlconn = mysql.createPool(mysqlConfig);
+if (mysqlconn) {
+  console.log("mysql connected sucessfully!");
+} else {
+  console.log("mysql connection error");
+}
 
 //mongodb connection
 mongoose.connect(process.env.MONGODBCONN, {
