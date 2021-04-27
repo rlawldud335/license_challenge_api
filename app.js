@@ -10,6 +10,7 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import "./passport";
 import dotenv from "dotenv";
+import challengeRouter from "./routes/challengeRouter";
 
 dotenv.config();
 
@@ -33,5 +34,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(routes.auth, authRouter);
+app.use(routes.challenge, challengeRouter);
 
 export default app;
