@@ -30,7 +30,7 @@ export const createBoard = async(req, res) => {
     const body = req.body;
     try {
         const conn = await mysqlconn.getConnection(async (conn) => conn);
-        const data = await conn.query(boardQuery.creatBoard, 
+        const data = await conn.query(boardQuery.createBoard, 
             [
                 body.boardId,
                 body.userId,
