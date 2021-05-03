@@ -26,11 +26,11 @@ export const getBoard = async (req, res) => {
     }
 };
 
-export const insertBoard = async(req, res) => {
+export const createBoard = async(req, res) => {
     const body = req.body;
     try {
         const conn = await mysqlconn.getConnection(async (conn) => conn);
-        const data = await conn.query(boardQuery.insertBoard, 
+        const data = await conn.query(boardQuery.creatBoard, 
             [
                 body.boardId,
                 body.userId,
@@ -42,7 +42,8 @@ export const insertBoard = async(req, res) => {
                 body.editDt,
                 body.reportCnt
             ]);
-        return res.json(data[0]);
+        //return res.json(data[0]);
+        return res.send("create success!");
     } catch(error) {
         console.log(error);
         return res.status(500).json(error);
@@ -54,7 +55,8 @@ export const deleteBoard = async (req, res) => {
     try {
       const conn = await mysqlconn.getConnection(async (conn) => conn);
       const del = await conn.query(boardQuery.deleteBoard, [boardId]);
-      return res.json(del);
+      //return res.json(del);
+      return res.send("delete success!");
     } catch(error) {
       console.log(error);
       return res.status(500).json(error);
