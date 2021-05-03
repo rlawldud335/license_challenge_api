@@ -12,6 +12,8 @@ import "./passport";
 import dotenv from "dotenv";
 import challengeRouter from "./routes/challengeRouter";
 import boardRouter from "./routes/boardRouter";
+import licenseRouter from "./routes/licenseRouter";
+import licenseScheduleRouter from "./routes/licenseScheduleRouter";
 
 dotenv.config();
 
@@ -37,5 +39,7 @@ app.use(passport.session());
 app.use(routes.auth, authRouter);
 app.use(routes.challenge, challengeRouter);
 app.use(routes.board, boardRouter);
+app.use(routes.license, licenseRouter);
+app.use(routes.licenseSchedule, licenseScheduleRouter);
 
 export default app;

@@ -7,13 +7,16 @@ const KAKAO_CALLBACK = "/kakao/callback";
 const NAVER = "/naver";
 const NAVER_CALLBACK = "/naver/callback";
 
+//licenseSchedule
+const LICENSESCHEDULE = "/licenseSchedule";
+
 //license
 const LICENSE = "/license";
 
 //challenge
 const CHALLENGE = "/challenge";
 
-//post
+//board
 const BOARD = "/board";
 
 //user
@@ -31,6 +34,7 @@ const routes = {
   naver: NAVER,
   naverCallback: NAVER_CALLBACK,
   license: LICENSE,
+  licenseSchedule: LICENSESCHEDULE,
   challenge: CHALLENGE,
   board: BOARD,
   user: USER,
