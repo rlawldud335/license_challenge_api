@@ -14,7 +14,7 @@ const LICENSE = "/license";
 const CHALLENGE = "/challenge";
 
 //post
-const POST = "/post";
+const BOARD = "/board";
 
 //user
 const USER = "/user";
@@ -32,7 +32,7 @@ const routes = {
   naverCallback: NAVER_CALLBACK,
   license: LICENSE,
   challenge: CHALLENGE,
-  post: POST,
+  board: BOARD,
   user: USER,
   gifticon: GIFTICON,
 };
