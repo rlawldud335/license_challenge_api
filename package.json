@@ -25,6 +25,8 @@
     "@babel/preset-env": "^7.13.12",
     "aws-sdk": "^2.889.0",
     "babel-loader": "^8.2.2",
+    "babel-node": "0.0.1-security",
+    "bebel": "^1.1.4",
     "body-parser": "^1.19.0",
     "connect-mongo": "^4.4.1",
     "cookie-parser": "^1.4.5",
@@ -42,5 +44,6 @@
     "passport-github": "^1.1.0",
     "passport-kakao": "^1.0.1",
     "passport-naver": "^1.0.6"
-  }
+  },
+  "keywords": []
 }
