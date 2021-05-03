@@ -1,1 +1,0 @@
-export const getLicenseSchedule = "SELECT * FROM license_challenge.license_schedule WHERE scheduleId = ?;"
