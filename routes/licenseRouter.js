@@ -3,10 +3,10 @@ import express from "express";
 const licenseRouter = express.Router();
 const licenseController = require("../controllers/licenseController");
 
-// readAll license
-licenseRouter.get("/all", licenseController.getAllLicense);
+// read 30 license
+licenseRouter.get("/all/:pageNum", licenseController.get30License);
 
-// readDetail license
+// read Detail license
 licenseRouter.get("/read/:licenseId", licenseController.getLicense);
 
 export default licenseRouter;

@@ -1,12 +1,15 @@
 import { mysqlconn, mgconn } from "../db";
 const licenseQuery = require("../queries/licenseQuery");
 
-export const getAllLicense = async (req, res) => {
+export const get30License = async (req, res) => {
+    const {params:{pageNum}} = req;
     try {
       const conn = await mysqlconn.getConnection(async (conn) => conn);
-      const data = await conn.query(licenseQuery.getAllLicense);
+      const query = licenseQuery.get30License + (pageNum - 1) * 30 + ",30";
+      const data = await conn.query(query);
       const rows = data[0];
       return res.json(rows);
+
     } catch(error) {
       console.log(error);
       return res.status(500).json(error);
