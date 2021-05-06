@@ -4,8 +4,11 @@
   "description": "kit swEngineering 4-1 project",
   "main": "init.js",
   "scripts": {
-    "start": "babel-node init.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:server": "babel-node src/init.js",
+    "build": "babel src --out-dir build",
+    "prebuild": "rm -rf build",
+    "start": "PRODUCTION=true node build/init.js",
+    "prestart": "npm run build"
   },
   "repository": {
     "type": "git",
