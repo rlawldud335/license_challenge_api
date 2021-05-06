@@ -12,6 +12,8 @@ const LICENSESCHEDULE = "/licenseSchedule";
 
 //license
 const LICENSE = "/license";
+const LICENSEALL = "/get/all/:pageNum";
+const LICENSEDETAIL = "/get/:licenseId";
 
 //challenge
 const CHALLENGE = "/challenge";
@@ -34,6 +36,8 @@ const routes = {
   naver: NAVER,
   naverCallback: NAVER_CALLBACK,
   license: LICENSE,
+  licenseDetail: LICENSEDETAIL,
+  licenseAll: LICENSEALL,
   licenseSchedule: LICENSESCHEDULE,
   challenge: CHALLENGE,
   board: BOARD,
