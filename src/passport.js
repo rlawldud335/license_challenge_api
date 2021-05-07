@@ -16,9 +16,7 @@ passport.use(
     {
       clientID: process.env.NAVER_KEY,
       clientSecret: process.env.NAVER_SECRET,
-      callbackURL: process.env.PRODUCTION
-        ? `https://license-challenge.herokuapp.com/auth/naver/callback`
-        : `http://localhost:3000/auth/naver/callback`,
+      callbackURL: `https://license-challenge.herokuapp.com/auth/naver/callback`,
     },
     NaverCallback
   )
@@ -29,9 +27,7 @@ passport.use(
     {
       clientID: process.env.KAKAO_KEY,
       clientSecret: process.env.KAKAO_SECRET,
-      callbackURL: process.env.PRODUCTION
-        ? `https://license-challenge.herokuapp.com/auth/kakao/callback`
-        : `http://localhost:3000/auth/kakao/callback`,
+      callbackURL: `https://license-challenge.herokuapp.com/auth/kakao/callback`,
     },
     KakaoCallback
   )
@@ -42,9 +38,7 @@ passport.use(
     {
       clientID: process.env.GH_ID,
       clientSecret: process.env.GH_SECRET,
-      callbackURL: process.env.PRODUCTION
-        ? `https://license-challenge.herokuapp.com/auth/github/callback`
-        : `http://localhost:3000/auth/github/callback`,
+      callbackURL: `https://license-challenge.herokuapp.com/auth/github/callback`,
     },
     GithubCallback
   )

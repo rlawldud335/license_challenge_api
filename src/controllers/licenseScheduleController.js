@@ -1,19 +1,20 @@
-import { mysqlconn, mgconn } from "../db";
-const licenseScheduleQuery = require("../queries/licenseScheduleQuery");
+import { mysqlconn } from "../db";
+import licenseScheduleQuery from "../queries/licenseScheduleQuery";
 
 export const getLicenseSchedule = async (req, res) => {
-  let { scheduleId } = req.params;
   try {
-    const conn = await mysqlconn.getConnection(async (conn) => conn);
-    const data = await conn.query(licenseScheduleQuery.getLicenseSchedule, [
-      scheduleId,
-    ]);
-    const rows = data[0];
-    return res.json(rows[0]);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json(error);
-  } finally {
-    conn.release();
+    let { scheduleId } = req.params;
+    await mysqlConn(async (conn) => {
+      const [
+        data,
+        schema,
+      ] = await conn.query(licenseScheduleQuery.getLicenseSchedule, [
+        scheduleId,
+      ]);
+      return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
   }
 };

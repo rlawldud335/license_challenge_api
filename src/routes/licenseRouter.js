@@ -1,13 +1,13 @@
 import express from "express";
-import routes from "../routes"
+import routes from "../routes";
+import { get30License, getLicense } from "../controllers/licenseController";
 
 const licenseRouter = express.Router();
-const licenseController = require("../controllers/licenseController");
 
 // read 30 license
-licenseRouter.get(routes.licenseAll, licenseController.get30License);
+licenseRouter.get(routes.licenseAll, get30License);
 
 // read Detail license
-licenseRouter.get(routes.licenseDetail, licenseController.getLicense);
+licenseRouter.get(routes.licenseDetail, getLicense);
 
 export default licenseRouter;

@@ -1,9 +1,9 @@
 import express from "express";
+import { getLicenseSchedule } from "../controllers/licenseScheduleController";
 
 const licenseScheduleRouter = express.Router();
-const licenseScheduleController = require("../controllers/licenseScheduleController");
 
 // readDetail licenseSchedule
-licenseScheduleRouter.get("/read/:scheduleId", licenseScheduleController.getLicenseSchedule);
+licenseScheduleRouter.get("/read/:scheduleId", getLicenseSchedule);
 
 export default licenseScheduleRouter;

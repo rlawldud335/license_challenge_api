@@ -1,26 +1,31 @@
 import express from "express";
-const boardController = require("../controllers/boardController");
+import {
+  getAllBoard,
+  getBoard,
+  createBoard,
+  deleteBoard,
+  createComment,
+  deleteComment,
+} from "../controllers/boardController";
 
 const boardRouter = express.Router();
 
 //readAll board
-boardRouter.get("/all", boardController.getAllBoard);
+boardRouter.get("/all", getAllBoard);
 
 //readDetail board
-boardRouter.get("/read/:boardId", boardController.getBoard);
+boardRouter.get("/read/:boardId", getBoard);
 
 //create board
-boardRouter.post("/create", boardController.createBoard);
+boardRouter.post("/create", createBoard);
 
 //delete board
-boardRouter.delete("/delete/:boardId", boardController.deleteBoard);
-
-
+boardRouter.delete("/delete/:boardId", deleteBoard);
 
 //create comment
-boardRouter.post("/read/:boardId/create", boardController.createComment);
+boardRouter.post("/read/:boardId/create", createComment);
 
 //delete comment
-boardRouter.delete("/delete/:boardId/comment/:commentId", boardController.deleteComment);
+boardRouter.delete("/delete/:boardId/comment/:commentId", deleteComment);
 
 export default boardRouter;

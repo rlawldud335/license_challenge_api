@@ -10,7 +10,7 @@ const hadleListening = () => {
   console.log(process.env.PRODUCTION);
   console.log(
     process.env.PRODUCTION
-      ? `Listening on: https://license-challenge.herokuapp.com:${PORT}`
+      ? `Listening on: https://license-challenge.herokuapp.com`
       : `Listening on: http://localhost:${PORT}`
   );
 };

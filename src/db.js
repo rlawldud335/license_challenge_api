@@ -6,12 +6,12 @@ dotenv.config();
 
 //mysql connection
 const mysqlConfig = JSON.parse(process.env.MYSQLCONN);
-const mysqlconn = mysql.createPool(mysqlConfig);
-if (mysqlconn) {
-  console.log("mysql connected sucessfully!");
-} else {
-  console.log("mysql connection error");
-}
+const mysqlPool = mysql.createPool(mysqlConfig);
+const mysqlConn = async (callback) => {
+  const conn = await mysqlPool.getConnection();
+  await callback(conn);
+  conn.release();
+};
 
 //mongodb connection
 mongoose.connect(process.env.MONGODBCONN, {
@@ -25,4 +25,4 @@ mgconn.on("error", (error) =>
   console.log(`mongodb connection error : ${error}`)
 );
 
-export { mysqlconn, mgconn };
+export { mysqlConn, mgconn };
