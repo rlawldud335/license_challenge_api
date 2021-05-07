@@ -12,8 +12,8 @@ const LICENSESCHEDULE = "/licenseSchedule";
 
 //license
 const LICENSE = "/license";
-const LICENSEALL = "/get/all/:pageNum";
-const LICENSEDETAIL = "/get/:licenseId";
+const LICENSEALL = "/all/:pageNum";
+const LICENSEDETAIL = "/:licenseId";
 
 //challenge
 const CHALLENGE = "/challenge";
