@@ -10,6 +10,8 @@ export const getAllChallenge = async (req, res) => {
     console.log(error);
 
     return res.status(500).json(error);
+  } finally {
+    conn.release();
   }
 };
 
@@ -23,6 +25,8 @@ export const getChallenge = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
+  } finally {
+    conn.release();
   }
 };
 
@@ -64,6 +68,8 @@ export const createChallenge = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
+  } finally {
+    conn.release();
   }
 };
 
@@ -77,6 +83,8 @@ export const deleteChallenge = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
+  } finally {
+    conn.release();
   }
 };
 

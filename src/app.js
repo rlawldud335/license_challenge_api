@@ -40,8 +40,6 @@ app.use(routes.auth, authRouter);
 app.use(routes.challenge, challengeRouter);
 app.use(routes.board, boardRouter);
 app.use(routes.license, licenseRouter);
-app.use(routes.licenseAll, licenseRouter);
-app.use(routes.licenseDetail, licenseRouter);
 app.use(routes.licenseSchedule, licenseScheduleRouter);
 
 export default app;

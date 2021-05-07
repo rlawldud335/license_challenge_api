@@ -31,6 +31,8 @@ export const GithubCallback = async (_, __, profile, cb) => {
     return cb(null, newUser);
   } catch (error) {
     return cb(error);
+  } finally {
+    conn.release();
   }
 };
 //kakao login
@@ -62,6 +64,8 @@ export const KakaoCallback = async (_, __, profile, cb) => {
     return cb(null, newUser);
   } catch (error) {
     return cb(error);
+  } finally {
+    conn.release();
   }
 };
 //naver login
@@ -89,6 +93,7 @@ export const NaverCallback = async (_, __, profile, cb) => {
     return cb(null, newUser);
   } catch (error) {
     return cb(error);
+  } finally {
+    conn.release();
   }
 };
-
