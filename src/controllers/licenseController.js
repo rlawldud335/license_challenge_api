@@ -4,10 +4,10 @@ const licenseQuery = require("../queries/licenseQuery");
 export const get30License = async (req, res) => {
   try {
     const {
-      params: { pageNum },
+      query: { pageNum, numOfRows },
     } = req;
     await mysqlConn(async (conn) => {
-      const query = licenseQuery.get30License + (pageNum - 1) * 30 + ",30";
+      const query = licenseQuery.get30License + pageNum * 30 + "," + numOfRows;
       const [data, schema] = await conn.query(query);
       return res.status(200).json(data);
     });
