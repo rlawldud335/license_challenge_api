@@ -14,6 +14,7 @@ import challengeRouter from "./routes/challengeRouter";
 import boardRouter from "./routes/boardRouter";
 import licenseRouter from "./routes/licenseRouter";
 import licenseScheduleRouter from "./routes/licenseScheduleRouter";
+import cors from "cors";
 
 dotenv.config();
 
@@ -35,6 +36,8 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(cors());
 
 app.use(routes.auth, authRouter);
 app.use(routes.challenge, challengeRouter);
