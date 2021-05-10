@@ -24,7 +24,8 @@ export const getCategoryChallenge = async (req, res) => {
     } = req;
     await mysqlConn(async (conn) => {
       const query = challengeQuery.getCategoryChallenge + pageNum * 30 + "," + numOfRows;
-      const [data, schema] = await conn.query(query);
+      console.log(query);
+      const [data, schema] = await conn.query(query,[category]);
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -81,7 +82,7 @@ export const createChallenge = async (req, res) => {
         body.joinPeople,
       ]);
       //return res.json(data[0]);
-      return res.send("create success!");
+      return res.status(200).json();
     });
   } catch (err) {
     console.log(err);
@@ -96,7 +97,7 @@ export const deleteChallenge = async (req, res) => {
       const [data, schema] = await conn.query(challengeQuery.deleteChallenge, [
         challengeId,
       ]);
-      return res.send("delete success!");
+      return res.status(200).json();
     });
   } catch (err) {
     console.log(err);
@@ -104,7 +105,3 @@ export const deleteChallenge = async (req, res) => {
   }
 };
 
-exports.register = (req, res, next) => {
-  const Img = req.file;
-  console.log("s3 이미지 경로 :", Img.location);
-};
