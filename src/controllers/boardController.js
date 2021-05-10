@@ -1,10 +1,14 @@
 import { mysqlConn } from "../db";
 const boardQuery = require("../queries/boardQuery");
 
-export const getAllBoard = async (req, res) => {
+export const get30Board = async (req, res) => {
   try {
+    const {
+      query: { pageNum, numOfRows },
+    } = req;
     await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(boardQuery.getAllBoard);
+      const query = boardQuery.get30Board + pageNum * 30 + "," + numOfRows;
+      const [data, schema] = await conn.query(query);
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -18,9 +22,7 @@ export const getBoard = async (req, res) => {
     let { boardId } = req.params;
     await mysqlConn(async (conn) => {
       const [bdata, schema1] = await conn.query(boardQuery.getBoard, [boardId]);
-      const [cdata, schema2] = await conn.query(boardQuery.getComment, [
-        boardId,
-      ]);
+      const [cdata, schema2] = await conn.query(boardQuery.getComment, [boardId]);
       let myArray = [];
       myArray.push(bdata);
       myArray.push(cdata);
@@ -47,7 +49,7 @@ export const createBoard = async (req, res) => {
         body.editDt,
         body.reportCnt,
       ]);
-      return res.send("create success!");
+      return res.status(200).json("success");
     });
   } catch (err) {
     console.log(err);
@@ -60,7 +62,7 @@ export const deleteBoard = async (req, res) => {
     let { boardId } = req.params;
     await mysqlConn(async (conn) => {
       await conn.query(boardQuery.deleteBoard, [boardId]);
-      return res.send("delete success!");
+      return res.status(200).json("success!");
     });
   } catch (err) {
     console.log(err);
@@ -84,7 +86,7 @@ export const createComment = async (req, res) => {
         body.level,
         body.precedingComment,
       ]);
-      return res.send("create success!");
+      return res.status(200).json("success");
     });
   } catch (err) {
     console.log(err);
@@ -96,7 +98,7 @@ export const deleteComment = async (req, res) => {
   try {
     let { boardId, commentId } = req.params;
     await conn.query(boardQuery.deleteComment, [boardId, commentId]);
-    return res.send("delete success!");
+    return res.status(200).json("success");
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);

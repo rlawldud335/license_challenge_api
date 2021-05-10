@@ -19,6 +19,7 @@ const CHALLENGE = "/challenge";
 
 //board
 const BOARD = "/board";
+const BOARDDETAIL = "/:boardId";
 
 //user
 const USER = "/user";
@@ -39,6 +40,7 @@ const routes = {
   licenseSchedule: LICENSESCHEDULE,
   challenge: CHALLENGE,
   board: BOARD,
+  boardDetail: BOARDDETAIL,
   user: USER,
   gifticon: GIFTICON,
 };
