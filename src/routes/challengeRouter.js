@@ -18,7 +18,7 @@ challengeRouter.post(
   "/",
   upload.fields([
     { name: "challengeTitleImage" },
-    { name: "gooProofImage" },
+    { name: "goodProofImage" },
     { name: "badProofImage" },
   ]),
   createChallenge
