@@ -3,8 +3,14 @@ const challengeQuery = require("../queries/challengeQuery");
 
 export const getAllChallenge = async (req, res) => {
   try {
+    const {
+      query: { pageNum, numOfRows },
+    } = req;
     await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(challengeQuery.getAllChallenge);
+      const query = challengeQuery.getAllChallenge + (pageNum-1) * 30 + "," + numOfRows;
+      const [data, schema] = await conn.query(query);
+
+      console.log(query)
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -12,6 +18,23 @@ export const getAllChallenge = async (req, res) => {
     return res.status(500).json(err);
   }
 };
+
+export const getCategoryChallenge = async (req, res) => {
+  try {
+    const {
+      query: { category, pageNum, numOfRows },
+    } = req;
+    await mysqlConn(async (conn) => {
+      const query = challengeQuery.getCategoryChallenge + (pageNum-1) * 30 + "," + numOfRows;
+      const [data, schema] = await conn.query(query);
+      return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
 
 export const getChallenge = async (req, res) => {
   try {
