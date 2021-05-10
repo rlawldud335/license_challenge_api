@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  getAllChallenge,
   getCategoryChallenge,
   getChallenge,
   createChallenge,
@@ -11,7 +10,6 @@ import { upload } from "../uploadMiddlewares";
 const challengeRouter = express.Router();
 
 //challenge register
-challengeRouter.get("/all/", getAllChallenge);
 challengeRouter.get("/", getCategoryChallenge);
 challengeRouter.get("/:challengeId", getChallenge);
 challengeRouter.post(

@@ -1,32 +1,23 @@
 import { mysqlConn } from "../db";
 const challengeQuery = require("../queries/challengeQuery");
 
-export const getAllChallenge = async (req, res) => {
-  try {
-    const {
-      query: { pageNum, numOfRows },
-    } = req;
-    await mysqlConn(async (conn) => {
-      const query = challengeQuery.getAllChallenge + pageNum * 30 + "," + numOfRows;
-      const [data, schema] = await conn.query(query);
-      return res.status(200).json(data);
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
-  }
-};
 
 export const getCategoryChallenge = async (req, res) => {
   try {
     const {
       query: { category, pageNum, numOfRows },
     } = req;
+
     await mysqlConn(async (conn) => {
-      const query = challengeQuery.getCategoryChallenge + pageNum * 30 + "," + numOfRows;
-      console.log(query);
-      const [data, schema] = await conn.query(query,[category]);
-      return res.status(200).json(data);
+      if(category=="전체보기"){
+        const query = challengeQuery.getAllChallenge + pageNum * 30 + "," + numOfRows;
+        const [data, schema] = await conn.query(query);
+        return res.status(200).json(data);
+      } else {
+        const query = challengeQuery.getCategoryChallenge + pageNum * 30 + "," + numOfRows;
+        const [data, schema] = await conn.query(query,[category]);
+        return res.status(200).json(data);
+      }
     });
   } catch (err) {
     console.log(err);
