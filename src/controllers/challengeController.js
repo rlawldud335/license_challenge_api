@@ -7,10 +7,8 @@ export const getAllChallenge = async (req, res) => {
       query: { pageNum, numOfRows },
     } = req;
     await mysqlConn(async (conn) => {
-      const query = challengeQuery.getAllChallenge + (pageNum-1) * 30 + "," + numOfRows;
+      const query = challengeQuery.getAllChallenge + pageNum * 30 + "," + numOfRows;
       const [data, schema] = await conn.query(query);
-
-      console.log(query)
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -25,7 +23,7 @@ export const getCategoryChallenge = async (req, res) => {
       query: { category, pageNum, numOfRows },
     } = req;
     await mysqlConn(async (conn) => {
-      const query = challengeQuery.getCategoryChallenge + (pageNum-1) * 30 + "," + numOfRows;
+      const query = challengeQuery.getCategoryChallenge + pageNum * 30 + "," + numOfRows;
       const [data, schema] = await conn.query(query);
       return res.status(200).json(data);
     });
