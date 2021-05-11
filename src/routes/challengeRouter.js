@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  getAllChallenge,
+  getCategoryChallenge,
   getChallenge,
   createChallenge,
   deleteChallenge,
@@ -10,18 +10,17 @@ import { upload } from "../uploadMiddlewares";
 const challengeRouter = express.Router();
 
 //challenge register
-challengeRouter.get("/all", getAllChallenge);
-challengeRouter.get("/read/:challengeId", getChallenge);
+challengeRouter.get("/", getCategoryChallenge);
+challengeRouter.get("/:challengeId", getChallenge);
 challengeRouter.post(
-  "/create",
+  "/",
   upload.fields([
     { name: "challengeTitleImage" },
-    { name: "gooProofImage" },
+    { name: "goodProofImage" },
     { name: "badProofImage" },
   ]),
   createChallenge
 );
-challengeRouter.delete("/delete/:challengeId", deleteChallenge);
-//challengeRouter.post('/upload', upload.single('testImg'), challengeController.register);
+challengeRouter.delete("/:challengeId", deleteChallenge);
 
 export default challengeRouter;
