@@ -20,6 +20,8 @@ const CHALLENGE = "/challenge";
 //board
 const BOARD = "/board";
 const BOARDDETAIL = "/:boardId";
+const BOARDCOMMENT = "/:boardId/comment";
+const BOARDCOMMENTDETAIL = "/:boardId/comment/:commentId";
 
 //user
 const USER = "/user";
@@ -41,6 +43,8 @@ const routes = {
   challenge: CHALLENGE,
   board: BOARD,
   boardDetail: BOARDDETAIL,
+  boardComment: BOARDCOMMENT,
+  boardCommentDetail: BOARDCOMMENTDETAIL,
   user: USER,
   gifticon: GIFTICON,
 };
