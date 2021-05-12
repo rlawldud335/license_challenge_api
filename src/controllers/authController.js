@@ -1,12 +1,5 @@
 import { mysqlConn } from "../db";
 
-//github callback respose
-export const resCallback = (req, res) => {
-  res.status(200);
-  res.json(req.user);
-  res.end();
-};
-
 //github login
 export const GithubCallback = async (_, __, profile, cb) => {
   const {
