@@ -1,5 +1,5 @@
-export const getAllChallenge = "SELECT * FROM license_challenge.challenge LIMIT "
-export const getCategoryChallenge = "SELECT * FROM license_challenge.challenge WHERE challengeCategory = ? LIMIT "
+export const getAllChallenge = "SELECT challenge.challengeTitle, challenge.challengeTitleImage, challenge.proofCount, challenge.chgStartDt, challenge.chgEndDt, license.licenseName, challenge.deposit FROM challenge, license WHERE challenge.licenseId = license.licenseId LIMIT "
+export const getCategoryChallenge = "SELECT challenge.challengeTitle, challenge.challengeTitleImage, challenge.proofCount, challenge.chgStartDt, challenge.chgEndDt, license.licenseName, challenge.deposit FROM challenge, license WHERE challenge.licenseId = license.licenseId AND challengeCategory = ? LIMIT "
 export const getChallenge = "SELECT * FROM license_challenge.challenge WHERE challengeId = ?;"
 export const createChallenge = "INSERT INTO license_challenge.challenge (challengeTitle, challengeCategory, scheduleId, leaderId, proofMethod, proofCount, proofCountOneDay, chgStartDt, chgEndDt, challengeTerm, challengeTitleImage, challengeInroduction, goodProofImage, badProofImage, deposit, limitPeople, joinPeople) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
 export const deleteChallenge = "DELETE FROM license_challenge.challenge WHERE challengeId = ?;"
