@@ -11,7 +11,7 @@ authRouter.get(
     failureRedirect: "/auth/github",
   }),
   (req, res) => {
-    res.redirect(`exp://127.0.0.1:19000?sid=${req.sessionID}`);
+    res.redirect(`exp://127.0.0.1:19000?uid=${req.user.userId}`);
   }
 );
 
@@ -22,7 +22,7 @@ authRouter.get(
     failureRedirect: "/auth/kakao",
   }),
   (req, res) => {
-    res.redirect(`exp://127.0.0.1:19000?sid=${req.sessionID}`);
+    res.redirect(`exp://127.0.0.1:19000?uid=${req.user.userId}`);
   }
 );
 
@@ -33,7 +33,7 @@ authRouter.get(
     failureRedirect: "/auth/naver",
   }),
   (req, res) => {
-    res.redirect(`exp://127.0.0.1:19000?sid=${req.sessionID}`);
+    res.redirect(`exp://127.0.0.1:19000?uid=${req.user.userId}`);
   }
 );
 
