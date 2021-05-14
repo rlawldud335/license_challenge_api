@@ -1,40 +1,68 @@
 import express from "express";
-import routes from "../routes";
-import passport from "passport";
+import jwt from "jsonwebtoken";
+import { mysqlConn } from "../db";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const authRouter = express.Router();
 
-authRouter.get(routes.github, passport.authenticate("github"));
-authRouter.get(
-  routes.githubCallback,
-  passport.authenticate("github", {
-    failureRedirect: "/auth/github",
-  }),
-  (req, res) => {
-    res.redirect(`exp://127.0.0.1:19000?uid=${req.user.userId}`);
+authRouter.post("/signup", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(422).send({ error: "must provide email or password" });
   }
-);
+  try {
+    await mysqlConn(async (conn) => {
+      const [[user]] = await conn.query(
+        "SELECT * FROM `user` WHERE `email`=?",
+        [email]
+      );
+      if (user) {
+        return res.status(401).send({ error: "This email exists" });
+      }
+      const result = await conn.query(
+        "INSERT INTO user(email,password) VALUES(?,?)",
+        [email, password]
+      );
+      const newUserId = result[0].insertId;
+      console.log(newUserId);
+      const token = jwt.sign(
+        {
+          userId: newUserId,
+        },
+        process.env.JWT_KEY
+      );
+      console.log(token);
+      return res.send({ token });
+    });
+  } catch (err) {
+    return res.status(422).send(err.message);
+  }
+});
 
-authRouter.get(routes.kakao, passport.authenticate("kakao"));
-authRouter.get(
-  routes.kakaoCallback,
-  passport.authenticate("kakao", {
-    failureRedirect: "/auth/kakao",
-  }),
-  (req, res) => {
-    res.redirect(`exp://127.0.0.1:19000?uid=${req.user.userId}`);
+authRouter.post("/signin", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(422).send({ error: "must provide email or password" });
   }
-);
-
-authRouter.get(routes.naver, passport.authenticate("naver"));
-authRouter.get(
-  routes.naverCallback,
-  passport.authenticate("naver", {
-    failureRedirect: "/auth/naver",
-  }),
-  (req, res) => {
-    res.redirect(`exp://127.0.0.1:19000?uid=${req.user.userId}`);
-  }
-);
+  await mysqlConn(async (conn) => {
+    //find user
+    const [[user]] = await conn.query("SELECT * FROM `user` WHERE `email`=?", [
+      email,
+    ]);
+    if (!user) {
+      return res.status(422).send({ error: "must be sing up" });
+    }
+    try {
+      if (password == user.password) {
+        const token = jwt.sign({ userId: user.userId }, process.env.JWT_KEY);
+        res.send({ token });
+      }
+    } catch (error) {
+      return res.status(422).send({ error: "must be sing up" });
+    }
+  });
+});
 
 export default authRouter;
