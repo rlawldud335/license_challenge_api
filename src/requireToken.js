@@ -15,6 +15,7 @@ module.exports = (req, res, next) => {
       return res.status(401).send({ error: "you must be logged in 2" });
     }
     const { userId } = payload;
+    console.log(userId);
     await mysqlConn(async (conn) => {
       const [[user]] = await conn.query(
         "SELECT * FROM `user` WHERE `userId`=?",

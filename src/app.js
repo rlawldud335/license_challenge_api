@@ -11,6 +11,7 @@ import boardRouter from "./routes/boardRouter";
 import licenseRouter from "./routes/licenseRouter";
 import licenseScheduleRouter from "./routes/licenseScheduleRouter";
 import cors from "cors";
+import requireToken from "./requireToken";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 app.use(cors());
+app.use(requireToken);
 
 app.use(routes.auth, authRouter);
 app.use(routes.challenge, challengeRouter);
