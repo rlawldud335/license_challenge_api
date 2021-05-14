@@ -9,6 +9,7 @@ module.exports = (req, res, next) => {
   if (!authorization) {
     return res.status(401).send({ error: "you must be logged in" });
   }
+  console.log(authorization);
   const token = authorization.replace("Bearer ", "");
   jwt.verify(token, process.env.JWT_KEY, async (err, payload) => {
     if (err) {
