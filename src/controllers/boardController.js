@@ -32,25 +32,32 @@ export const getBoard = async (req, res) => {
 
 export const createBoard = async (req, res) => {
   const body = req.body;
+  if (req.user !== 'undefined') {
+    const [data, schema] = req.user;
+    console.log(data);
+    let { userId } = data.userId;
 
-  try {
-    await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(boardQuery.createBoard, [
-        body.userId,
-        body.category,
-        body.title,
-        body.content,
-        body.image
-      ]);
-      return res.status(200).json({
-        code: 200,
-        success: true,
-        message: 'create board'
+    try {
+      await mysqlConn(async (conn) => {
+        const [data, schema] = await conn.query(boardQuery.createBoard, [
+          userId,
+          body.category,
+          body.title,
+          body.content,
+          body.image
+        ]);
+        return res.status(200).json({
+          code: 200,
+          success: true,
+          message: 'create board'
+        });
       });
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  } else {
+    return res.status(422).send({ error: "must be sign in" });
   }
 };
 
