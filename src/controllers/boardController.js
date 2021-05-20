@@ -32,21 +32,21 @@ export const getBoard = async (req, res) => {
 
 export const createBoard = async (req, res) => {
   const body = req.body;
-   
+
   try {
     await mysqlConn(async (conn) => {
-      await conn.query(boardQuery.createBoard, [
-        body.boardId,
+      const [data, schema] = await conn.query(boardQuery.createBoard, [
         body.userId,
         body.category,
         body.title,
         body.content,
-        new Date(body.createDt),
-        body.image,
-        body.editDt,
-        body.reportCnt,
+        body.image
       ]);
-      return res.status(200).json("success");
+      return res.status(200).json({
+        code: 200,
+        success: true,
+        message: 'create board'
+      });
     });
   } catch (err) {
     console.log(err);

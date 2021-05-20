@@ -104,3 +104,41 @@ export const deleteChallenge = async (req, res) => {
   }
 };
 
+export const enterChallenge = async (req, res) => {
+  try {
+    let { challengeId } = req.params;
+    await mysqlConn(async (conn) => {
+      const [data, schema] = await conn.query(challengeQuery.enterChallenge, [
+        challengeId,
+      ]);
+      return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const paymentChallenge = async (req, res) => {
+  const body = req.body;
+  try {
+    await mysqlConn(async (conn) => {
+      const [data, schema] = await conn.query(challengeQuery.paymentChallenge, [
+        body.challengeId,
+        body.userId,
+        body.successCnt,
+        body.failCnt,
+        body.pass
+      ]);
+      return res.status(200).json({
+        code: 200,
+        success: true,
+        message: 'payment point & enter challenge'
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+

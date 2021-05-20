@@ -4,6 +4,8 @@ import {
   getChallenge,
   createChallenge,
   deleteChallenge,
+  enterChallenge,
+  paymentChallenge
 } from "../controllers/challengeController";
 import { upload } from "../uploadMiddlewares";
 
@@ -22,5 +24,7 @@ challengeRouter.post(
   createChallenge
 );
 challengeRouter.delete("/:challengeId", deleteChallenge);
+challengeRouter.get("/enter/:challengeId", enterChallenge);
+challengeRouter.post("/payment", paymentChallenge);
 
 export default challengeRouter;

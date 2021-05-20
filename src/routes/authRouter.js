@@ -52,7 +52,7 @@ authRouter.post("/signin", async (req, res) => {
       email,
     ]);
     if (!user) {
-      return res.status(422).send({ error: "must be sing up" });
+      return res.status(422).send({ error: "must be sign up" });
     }
     try {
       if (password == user.password) {
@@ -60,7 +60,7 @@ authRouter.post("/signin", async (req, res) => {
         res.send({ token });
       }
     } catch (error) {
-      return res.status(422).send({ error: "must be sing up" });
+      return res.status(422).send({ error: "must be sign up" });
     }
   });
 });

@@ -1,5 +1,6 @@
 import express from "express";
 import routes from "../routes";
+import { uploadCommunityImage } from "../uploadMiddlewares";
 import { get30Board, getBoard, createBoard, deleteBoard, getComment, deleteComment} from "../controllers/boardController";
 
 const boardRouter = express.Router();
@@ -11,7 +12,7 @@ boardRouter.get("/", get30Board);
 boardRouter.get(routes.boardDetail, getBoard);
 
 //create board
-boardRouter.post("/", createBoard);
+boardRouter.post("/", uploadCommunityImage, createBoard);
 
 //delete board
 boardRouter.delete(routes.boardDetail, deleteBoard);
