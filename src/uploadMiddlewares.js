@@ -2,10 +2,10 @@
 // import multerS3 from "multer-s3";
 // import aws from "aws-sdk";
 
-const multer = require('multer');
-const multerS3 = require('multer-s3');
-const aws = require('aws-sdk');
-require('dotenv').config();
+const multer = require("multer");
+const multerS3 = require("multer-s3");
+const aws = require("aws-sdk");
+require("dotenv").config();
 
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_KEY,
@@ -27,4 +27,3 @@ const upload = multer({
 });
 
 exports.upload = multer(upload);
-
