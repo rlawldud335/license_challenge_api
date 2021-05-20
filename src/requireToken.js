@@ -5,12 +5,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 module.exports = (req, res, next) => {
-  const { Authorization } = req.headers;
-  if (!Authorization) {
+  const { authorization } = req.headers;
+  console.log(req.headers);
+  if (!authorization) {
     return res.status(401).send({ error: "you must be logged in" });
   }
-  console.log(Authorization);
-  const token = Authorization.replace("Bearer ", "");
+  console.log(authorization);
+  const token = authorization.replace("Bearer ", "");
   jwt.verify(token, process.env.JWT_KEY, async (err, payload) => {
     if (err) {
       return res.status(401).send({ error: "you must be logged in 2" });
