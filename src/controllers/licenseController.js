@@ -1,13 +1,13 @@
 import { mysqlConn } from "../db";
 const licenseQuery = require("../queries/licenseQuery");
 
-export const get30License = async (req, res) => {
+export const getManyLicense = async (req, res) => {
   try {
     const {
       query: { pageNum, numOfRows },
     } = req;
     await mysqlConn(async (conn) => {
-      const query = licenseQuery.get30License + pageNum * 30 + "," + numOfRows;
+      const query = licenseQuery.getManyLicense + pageNum * numOfRows + "," + numOfRows;
       const [data, schema] = await conn.query(query);
       return res.status(200).json(data);
     });

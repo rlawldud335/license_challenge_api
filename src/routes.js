@@ -8,12 +8,12 @@ const NAVER = "/naver";
 const NAVER_CALLBACK = "/naver/callback";
 
 //licenseSchedule
-const LICENSESCHEDULE = "/licenseSchedule";
+const LICENSESCHEDULE = "/:licenseId";
 
 //license
 const LICENSE = "/license";
-const LICENSEDETAIL = "/:licenseId";
-const SEARCHLICENSE = "/:searchWord";
+const LICENSEDETAIL = "/id/:licenseId";
+const SEARCHLICENSE = "/name/:searchWord";
 
 //challenge
 const CHALLENGE = "/challenge";
