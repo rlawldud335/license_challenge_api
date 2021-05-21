@@ -28,6 +28,7 @@ export const getCategoryChallenge = async (req, res) => {
 
 export const getChallenge = async (req, res) => {
   try {
+    console.log(req.user)
     let { challengeId } = req.params;
     await mysqlConn(async (conn) => {
       const [data, schema] = await conn.query(challengeQuery.getChallenge, [
@@ -43,6 +44,10 @@ export const getChallenge = async (req, res) => {
 
 export const createChallenge = async (req, res) => {
   const body = req.body;
+  const user = req.user.userId;
+  const chgStartDt = new Date(body.chgStartDt);
+  const chgEndDt = new Date(body.chgEndDt);
+  const challengeTerm = Math.ceil((chgEndDt.getTime()-chgStartDt.getTime())/(1000*3600*24)) * body.proofCountOneDay;
   const challengeTitleImage = req.files["challengeTitleImage"][0];
   const goodProofImage = req.files["goodProofImage"][0];
   const badProofImage = req.files["badProofImage"][0];
@@ -56,21 +61,20 @@ export const createChallenge = async (req, res) => {
         body.challengeCategory,
         body.licenseId,
         body.scheduleId,
-        body.leaderId,
+        user,
         body.proofMethod,
         body.proofAvailableDay,
         body.proofCount,
         body.proofCountOneDay,
-        new Date(body.chgStartDt),
-        new Date(body.chgEndDt),
-        body.challengeTerm,
+        chgStartDt,
+        chgEndDt,
+        challengeTerm,
         challengeTitleImage.location,
         body.challengeIntroduction,
         goodProofImage.location,
         badProofImage.location,
         body.deposit,
-        body.limitPeople,
-        body.joinPeople,
+        body.limitPeople
       ]);
       //return res.json(data[0]);
       return res.status(200).json({
@@ -103,4 +107,6 @@ export const deleteChallenge = async (req, res) => {
     return res.status(500).json(err);
   }
 };
+
+
 
