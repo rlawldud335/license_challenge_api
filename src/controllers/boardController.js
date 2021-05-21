@@ -1,13 +1,16 @@
 import { mysqlConn } from "../db";
 const boardQuery = require("../queries/boardQuery");
 
-export const get30Board = async (req, res) => {
+export const getCategoryBoard = async (req, res) => {
+  if (req.user == 'undefined') {
+    return res.status(422).send({ error: "must be sign in" });
+  }
   try {
     const {
       query: { category, pageNum, numOfRows },
     } = req;
     await mysqlConn(async (conn) => {
-      const query = boardQuery.get30Board + pageNum * 30 + "," + numOfRows;
+      const query = boardQuery.getCategoryBoard + pageNum * 30 + "," + numOfRows;
       const [data, schema] = await conn.query(query, [category]);
       return res.status(200).json(data);
     });
@@ -18,6 +21,9 @@ export const get30Board = async (req, res) => {
 };
 
 export const getBoard = async (req, res) => {
+  if (req.user == 'undefined') {
+    return res.status(422).send({ error: "must be sign in" });
+  }
   try {
     let { boardId } = req.params;
     await mysqlConn(async (conn) => {

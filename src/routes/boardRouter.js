@@ -1,31 +1,24 @@
 import express from "express";
 import routes from "../routes";
 import { boardImage } from "../uploadMiddlewares";
-import { get30Board, getBoard, createBoard, deleteBoard, getComment, deleteComment} from "../controllers/boardController";
+import { getCategoryBoard, getBoard, createBoard, deleteBoard, getComment, deleteComment} from "../controllers/boardController";
 
 const boardRouter = express.Router();
 
-//read 30 board
-boardRouter.get("/", get30Board);
-
-
-//read detail board
+//카테고리별 조회(=게시글 전체조회)
+boardRouter.get("/", getCategoryBoard);
+//게시글 상세조회
 boardRouter.get(routes.boardDetail, getBoard);
-
-//create board
+//게시글 등록
 boardRouter.post("/", boardImage.single('image'), createBoard);
+//게시글 삭제
+boardRouter.delete(routes.boardDetail, deleteBoard);
 
-//delete board
-boardRouter.delete("/:boardId", deleteBoard);
-
-
-//read comment
+//댓글 조회
 boardRouter.get(routes.boardComment, getComment);
-
-//create comment
+//댓글 등록
 //boardRouter.post(":boardId/create", createComment);
-
-//delete comment
+//댓글 삭제
 boardRouter.delete(routes.boardCommentDetail, deleteComment);
 
 export default boardRouter;

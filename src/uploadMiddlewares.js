@@ -35,7 +35,7 @@ const boardImage = multer({
     bucket: "licensechallenge",
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file, cb) => {
-      cb(null, `board/${Date.now()}_${file.originalname}`);
+      cb(null, `board/image/${Date.now()}_${file.originalname}`);
     },
   }),
 });
