@@ -31,39 +31,43 @@ export const getBoard = async (req, res) => {
 };
 
 export const createBoard = async (req, res) => {
-  const body = req.body;
-  if (req.user !== 'undefined') {
-    const [data, schema] = req.user;
-    console.log(data);
-    let { userId } = data.userId;
-
-    try {
-      await mysqlConn(async (conn) => {
-        const [data, schema] = await conn.query(boardQuery.createBoard, [
-          userId,
-          body.category,
-          body.title,
-          body.content,
-          body.image
-        ]);
-        return res.status(200).json({
-          code: 200,
-          success: true,
-          message: 'create board'
-        });
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json(err);
-    }
-  } else {
+  if (req.user == 'undefined') {
     return res.status(422).send({ error: "must be sign in" });
+  }
+  try {
+    const body = req.body;
+    const image = req.file;
+    console.log("s3 board이미지 경로 :", image.location);
+
+    await mysqlConn(async (conn) => {
+      await conn.query(boardQuery.createBoard, [
+        req.user.userId,
+        body.category,
+        body.title,
+        body.content,
+        image.location
+      ]);
+      return res.status(200).json({
+        code: 200,
+        success: true,
+        message: 'create board',
+        image: image.location
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
   }
 };
 
+
 export const deleteBoard = async (req, res) => {
+  if (req.user == 'undefined') {
+    return res.status(422).send({ error: "must be sign in" });
+  }
   try {
     let { boardId } = req.params;
+    console.log(boardId);
     await mysqlConn(async (conn) => {
       await conn.query(boardQuery.deleteBoard, [boardId]);
       return res.status(200).json({
@@ -77,7 +81,6 @@ export const deleteBoard = async (req, res) => {
     return res.status(500).json(err);
   }
 };
-
 
 
 ////////////////////////////////COMMENT/////////////////////////////////////////

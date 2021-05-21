@@ -28,18 +28,15 @@ const upload = multer({
 exports.upload = multer(upload);
 
 
-const multerCommunityImage = multer({
+const boardImage = multer({
   storage: multerS3({
     s3,
     acl: "public-read",
     bucket: "licensechallenge",
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file, cb) => {
-      const fileName = Data.now()+"-"+file.originalname;
-      const path = "/community"+fileName;
-      cb(null, path);
+      cb(null, `board/${Date.now()}_${file.originalname}`);
     },
   }),
 });
-
-export const uploadCommunityImage = multerCommunityImage.single("image");
+exports.boardImage = multer(boardImage);
