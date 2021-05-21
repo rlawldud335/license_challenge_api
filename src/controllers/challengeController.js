@@ -1,6 +1,21 @@
 import { mysqlConn } from "../db";
 const challengeQuery = require("../queries/challengeQuery");
 
+export const getOngoingChallenge = async (req, res) => {
+  const userId = req.user.userId;
+  console.log(req.user)
+  try {
+    await mysqlConn(async (conn) => {
+      const query = challengeQuery.getOngoingChallenge;
+      console.log(query)      
+      const [data, schema] = await conn.query(query,[userId]);
+      return res.status(200).json(data);     
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
 
 export const getCategoryChallenge = async (req, res) => {
   try {
@@ -10,11 +25,11 @@ export const getCategoryChallenge = async (req, res) => {
 
     await mysqlConn(async (conn) => {
       if(category=="전체보기"){
-        const query = challengeQuery.getAllChallenge + pageNum * 30 + "," + numOfRows;
+        const query = challengeQuery.getAllChallenge + pageNum * numOfRows + "," + numOfRows;
         const [data, schema] = await conn.query(query);
         return res.status(200).json(data);
       } else {
-        const query = challengeQuery.getCategoryChallenge + pageNum * 30 + "," + numOfRows;
+        const query = challengeQuery.getCategoryChallenge + pageNum * numOfRows + "," + numOfRows;
         const [data, schema] = await conn.query(query,[category]);
         return res.status(200).json(data);
       }
@@ -28,7 +43,6 @@ export const getCategoryChallenge = async (req, res) => {
 
 export const getChallenge = async (req, res) => {
   try {
-    console.log(req.user)
     let { challengeId } = req.params;
     await mysqlConn(async (conn) => {
       const [data, schema] = await conn.query(challengeQuery.getChallenge, [
@@ -44,7 +58,7 @@ export const getChallenge = async (req, res) => {
 
 export const createChallenge = async (req, res) => {
   const body = req.body;
-  const user = req.user.userId;
+  const userId = req.user.userId;
   const chgStartDt = new Date(body.chgStartDt);
   const chgEndDt = new Date(body.chgEndDt);
   const challengeTerm = Math.ceil((chgEndDt.getTime()-chgStartDt.getTime())/(1000*3600*24)) * body.proofCountOneDay;
@@ -107,6 +121,7 @@ export const deleteChallenge = async (req, res) => {
     return res.status(500).json(err);
   }
 };
+
 
 
 
