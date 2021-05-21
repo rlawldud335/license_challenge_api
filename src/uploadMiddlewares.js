@@ -25,5 +25,18 @@ const upload = multer({
     },
   }),
 });
-
 exports.upload = multer(upload);
+
+
+const boardImage = multer({
+  storage: multerS3({
+    s3,
+    acl: "public-read",
+    bucket: "licensechallenge",
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    key: (req, file, cb) => {
+      cb(null, `board/image/${Date.now()}_${file.originalname}`);
+    },
+  }),
+});
+exports.boardImage = multer(boardImage);

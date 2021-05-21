@@ -12,8 +12,6 @@ import { upload } from "../uploadMiddlewares";
 
 const challengeRouter = express.Router();
 
-//challenge register
-
 //진행중인 챌린지 조회
 challengeRouter.get("/ongoingChallenge", getOngoingChallenge);
 //종료챌린지 조회
@@ -34,8 +32,10 @@ challengeRouter.post(
   ]),
   createChallenge
 );
+//챌린지 삭제
 challengeRouter.delete("/:challengeId", deleteChallenge);
-
 //챌린지 참가
+//challengeRouter.get("/enter/:challengeId", enterChallenge);
+//challengeRouter.post("/payment", paymentChallenge);
 
 export default challengeRouter;
