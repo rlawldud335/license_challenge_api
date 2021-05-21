@@ -1,8 +1,6 @@
 import { mysqlConn } from "../db";
 const challengeQuery = require("../queries/challengeQuery");
 
-<<<<<<< Updated upstream
-=======
 export const searchChallenge = async (req, res) => {
   let { keyword } = req.params;
   try {
@@ -44,7 +42,6 @@ export const getEndedChallenge = async (req, res) => {
     return res.status(500).json(err);
   }
 };
->>>>>>> Stashed changes
 
 export const getCategoryChallenge = async (req, res) => {
   try {
@@ -87,20 +84,6 @@ export const getChallenge = async (req, res) => {
 };
 
 export const createChallenge = async (req, res) => {
-<<<<<<< Updated upstream
-  const body = req.body;
-  const user = req.user.userId;
-  const chgStartDt = new Date(body.chgStartDt);
-  const chgEndDt = new Date(body.chgEndDt);
-  const challengeTerm = Math.ceil((chgEndDt.getTime()-chgStartDt.getTime())/(1000*3600*24)) * body.proofCountOneDay;
-  const challengeTitleImage = req.files["challengeTitleImage"][0];
-  const goodProofImage = req.files["goodProofImage"][0];
-  const badProofImage = req.files["badProofImage"][0];
-  console.log("s3 title이미지 경로 :", challengeTitleImage.location);
-  console.log("s3 good이미지 경로 :", goodProofImage.location);
-  console.log("s3 bad이미지 경로 :", badProofImage.location);
-=======
->>>>>>> Stashed changes
   try {
     const body = req.body;
     const userId = req.user.userId;
