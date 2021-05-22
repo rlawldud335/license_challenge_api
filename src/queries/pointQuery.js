@@ -1,0 +1,2 @@
+export const chargePoint = "INSERT INTO point_log(userId, type, price, balance) VALUES (?, '충전', ?, (SELECT point FROM user WHERE userId=?)+?)"
+export const sumBalance = "UPDATE user SET point = point+? WHERE userId = ?"
