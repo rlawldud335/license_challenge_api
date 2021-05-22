@@ -2,7 +2,9 @@ import { mysqlConn } from "../db";
 const challengeQuery = require("../queries/challengeQuery");
 
 export const searchChallenge = async (req, res) => {
-  let { keyword } = req.params;
+  const {
+    query: { keyword },
+  } = req;
   try {
     await mysqlConn(async (conn) => {
       const query = challengeQuery.searchChallenge;   
@@ -51,11 +53,11 @@ export const getCategoryChallenge = async (req, res) => {
 
     await mysqlConn(async (conn) => {
       if(category=="전체보기"){
-        const query = challengeQuery.getAllChallenge + pageNum * 30 + "," + numOfRows;
+        const query = challengeQuery.getAllChallenge + pageNum * numOfRows+ "," + numOfRows;
         const [data, schema] = await conn.query(query);
         return res.status(200).json(data);
       } else {
-        const query = challengeQuery.getCategoryChallenge + pageNum * 30 + "," + numOfRows;
+        const query = challengeQuery.getCategoryChallenge + pageNum * numOfRows + "," + numOfRows;
         const [data, schema] = await conn.query(query,[category]);
         return res.status(200).json(data);
       }
@@ -102,7 +104,7 @@ export const createChallenge = async (req, res) => {
         body.challengeCategory,
         body.licenseId,
         body.scheduleId,
-        user,
+        userId,
         body.proofMethod,
         body.proofAvailableDay,
         body.proofCount,

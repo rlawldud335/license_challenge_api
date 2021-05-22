@@ -21,7 +21,7 @@ challengeRouter.get("/", getCategoryChallenge);
 //챌린지 상세조회
 challengeRouter.get("/:challengeId", getChallenge);
 //챌린지 검색
-challengeRouter.get("/searchChallenge/:keyword", searchChallenge);
+challengeRouter.get("/search", searchChallenge);
 //챌린지 생성
 challengeRouter.post(
   "/",
