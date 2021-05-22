@@ -88,6 +88,19 @@ export const deleteBoard = async (req, res) => {
   }
 };
 
+export const searchBoard = async (req, res) => {
+  let { keyword } = req.params;
+  try {
+    await mysqlConn(async (conn) => {
+      const query = boardQuery.searchBoard;   
+      const [data, schema] = await conn.query(query,[keyword]);
+      return res.status(200).json(data);     
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
 
 ////////////////////////////////COMMENT/////////////////////////////////////////
 

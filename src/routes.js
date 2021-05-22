@@ -21,6 +21,7 @@ const CHALLENGE = "/challenge";
 //board
 const BOARD = "/board";
 const BOARDDETAIL = "/:boardId";
+const SEARCHBOARD = "/content/:keyword";
 const BOARDCOMMENT = "/:boardId/comment";
 const BOARDCOMMENTDETAIL = "/:boardId/comment/:commentId";
 
@@ -45,6 +46,7 @@ const routes = {
   challenge: CHALLENGE,
   board: BOARD,
   boardDetail: BOARDDETAIL,
+  searchBoard: SEARCHBOARD,
   boardComment: BOARDCOMMENT,
   boardCommentDetail: BOARDCOMMENTDETAIL,
   user: USER,
