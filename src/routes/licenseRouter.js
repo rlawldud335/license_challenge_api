@@ -4,11 +4,11 @@ import { getManyLicense, getLicense, searchLicense } from "../controllers/licens
 
 const licenseRouter = express.Router();
 
-// read Detail license
-licenseRouter.get(routes.licenseDetail, getLicense);
-
 // search license
 licenseRouter.get(routes.searchLicense, searchLicense)
+
+// read Detail license
+licenseRouter.get(routes.licenseDetail, getLicense);
 
 // read many license
 licenseRouter.get("/", getManyLicense);

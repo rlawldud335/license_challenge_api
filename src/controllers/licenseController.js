@@ -33,10 +33,12 @@ export const getLicense = async (req, res) => {
 };
 
 export const searchLicense = async (req, res) => {
-  let { searchWord } = req.params;
   try {
+    const {
+      query: { keyword },
+    } = req;
     await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(licenseQuery.searchLicense, [searchWord]);
+      const [data, schema] = await conn.query(licenseQuery.searchLicense, [keyword]);
       return res.status(200).json(data);
     });
   } catch (err) {
