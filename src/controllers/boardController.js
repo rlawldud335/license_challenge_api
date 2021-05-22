@@ -10,7 +10,7 @@ export const getCategoryBoard = async (req, res) => {
       query: { category, pageNum, numOfRows },
     } = req;
     await mysqlConn(async (conn) => {
-      const query = boardQuery.getCategoryBoard + pageNum * 30 + "," + numOfRows;
+      const query = boardQuery.getCategoryBoard + pageNum * numOfRows + "," + numOfRows;
       const [data, schema] = await conn.query(query, [category]);
       return res.status(200).json(data);
     });
