@@ -12,8 +12,8 @@ const LICENSESCHEDULE = "/:licenseId";
 
 //license
 const LICENSE = "/license";
-const LICENSEDETAIL = "/id/:licenseId";
-const SEARCHLICENSE = "/name/:searchWord";
+const LICENSEDETAIL = "/:licenseId";
+const SEARCHLICENSE = "/search";
 
 //challenge
 const CHALLENGE = "/challenge";
@@ -21,7 +21,7 @@ const CHALLENGE = "/challenge";
 //board
 const BOARD = "/board";
 const BOARDDETAIL = "/:boardId";
-const SEARCHBOARD = "/content/:keyword";
+const SEARCHBOARD = "/search";
 const BOARDCOMMENT = "/:boardId/comment";
 const BOARDCOMMENTDETAIL = "/:boardId/comment/:commentId";
 
