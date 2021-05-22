@@ -31,6 +31,9 @@ const USER = "/user";
 //gifticon
 const GIFTICON = "/gifticon";
 
+//point
+const POINT = "/point"
+
 const routes = {
   auth: AUTH,
   github: GITHUB,
@@ -51,6 +54,7 @@ const routes = {
   boardCommentDetail: BOARDCOMMENTDETAIL,
   user: USER,
   gifticon: GIFTICON,
+  point: POINT,
 };
 
 export default routes;
