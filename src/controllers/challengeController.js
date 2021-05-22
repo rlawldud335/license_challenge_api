@@ -103,7 +103,6 @@ export const createChallenge = async (req, res) => {
         body.challengeTitle,
         body.challengeCategory,
         body.licenseId,
-        body.scheduleId,
         userId,
         body.proofMethod,
         body.proofAvailableDay,
