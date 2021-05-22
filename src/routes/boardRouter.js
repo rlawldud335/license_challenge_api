@@ -1,7 +1,7 @@
 import express from "express";
 import routes from "../routes";
 import { boardImage } from "../uploadMiddlewares";
-import { getCategoryBoard, getBoard, createBoard, deleteBoard, getComment, deleteComment} from "../controllers/boardController";
+import { getCategoryBoard, getBoard, createBoard, deleteBoard, searchBoard, getComment, deleteComment} from "../controllers/boardController";
 
 const boardRouter = express.Router();
 
@@ -13,6 +13,8 @@ boardRouter.get(routes.boardDetail, getBoard);
 boardRouter.post("/", boardImage.single('image'), createBoard);
 //게시글 삭제
 boardRouter.delete(routes.boardDetail, deleteBoard);
+//게시글 검색
+boardRouter.get(routes.searchBoard, searchBoard);
 
 //댓글 조회
 boardRouter.get(routes.boardComment, getComment);

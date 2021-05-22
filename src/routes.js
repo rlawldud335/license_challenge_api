@@ -21,6 +21,7 @@ const CHALLENGE = "/challenge";
 //board
 const BOARD = "/board";
 const BOARDDETAIL = "/:boardId";
+const SEARCHBOARD = "/content/:keyword";
 const BOARDCOMMENT = "/:boardId/comment";
 const BOARDCOMMENTDETAIL = "/:boardId/comment/:commentId";
 
@@ -29,6 +30,9 @@ const USER = "/user";
 
 //gifticon
 const GIFTICON = "/gifticon";
+
+//point
+const POINT = "/point"
 
 const routes = {
   auth: AUTH,
@@ -45,10 +49,12 @@ const routes = {
   challenge: CHALLENGE,
   board: BOARD,
   boardDetail: BOARDDETAIL,
+  searchBoard: SEARCHBOARD,
   boardComment: BOARDCOMMENT,
   boardCommentDetail: BOARDCOMMENTDETAIL,
   user: USER,
   gifticon: GIFTICON,
+  point: POINT,
 };
 
 export default routes;

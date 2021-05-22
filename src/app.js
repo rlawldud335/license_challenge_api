@@ -10,6 +10,7 @@ import challengeRouter from "./routes/challengeRouter";
 import boardRouter from "./routes/boardRouter";
 import licenseRouter from "./routes/licenseRouter";
 import licenseScheduleRouter from "./routes/licenseScheduleRouter";
+import pointRouter from "./routes/pointRouter";
 import cors from "cors";
 import requireToken from "./requireToken";
 
@@ -31,5 +32,6 @@ app.use(routes.challenge, challengeRouter);
 app.use(routes.board, boardRouter);
 app.use(routes.license, licenseRouter);
 app.use(routes.licenseSchedule, licenseScheduleRouter);
+app.use(routes.point, pointRouter);
 
 export default app;
