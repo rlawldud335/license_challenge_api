@@ -135,7 +135,11 @@ export const createComment = async (req, res) => {
         body.level,
         body.precedingComment,
       ]);
-      return res.status(200).json("success");
+      return res.status(200).json({
+        code: 200,
+        success: true,
+        message: 'create comment'
+      });
     });
   } catch (err) {
     console.log(err);
@@ -162,17 +166,18 @@ export const deleteComment = async (req, res) => {
 
 export const updateComment = async (req, res) => {
   try {
+    let { boardId, commentId } = req.params;
     const body = req.body;
-    const userId = req.user.userId;
     await mysqlConn(async (conn) => {
-      await conn.query(boardQuery.createComment, [
-        body.boardId,
-        userId,
+      await conn.query(boardQuery.updateComment, [
         body.content,
-        body.level,
-        body.precedingComment,
+        commentId
       ]);
-      return res.status(200).json("success");
+      return res.status(200).json({
+        code: 200,
+        success: true,
+        message: 'update comment'
+      });
     });
   } catch (err) {
     console.log(err);

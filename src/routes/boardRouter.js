@@ -18,11 +18,11 @@ boardRouter.get(routes.searchBoard, searchBoard);
 
 //댓글 조회
 boardRouter.get(routes.boardComment, getComment);
+//댓글 수정
+boardRouter.post(routes.boardCommentDetail, updateComment);
 //댓글 등록
 boardRouter.post(routes.boardComment, createComment);
 //댓글 삭제
 boardRouter.delete(routes.boardCommentDetail, deleteComment);
-//댓글 수정
-boardRouter.post(routes.boardCommentDetail, updateComment);
 
 export default boardRouter;
