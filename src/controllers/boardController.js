@@ -103,6 +103,21 @@ export const searchBoard = async (req, res) => {
   }
 };
 
+export const getBoardsOfWriter = async (req, res) => {
+  try {
+    const {
+      query: { writer },
+    } = req;
+    await mysqlConn(async (conn) => {
+      const [data, schema] = await conn.query(boardQuery.getBoardsOfWriter, [writer]);
+      return res.status(200).json(data);     
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
 ////////////////////////////////COMMENT/////////////////////////////////////////
 
 export const getComment = async (req, res) => {

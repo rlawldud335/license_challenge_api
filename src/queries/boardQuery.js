@@ -2,7 +2,8 @@ export const getCategoryBoard = "SELECT * FROM license_challenge.board WHERE cat
 export const getBoard = "SELECT * FROM license_challenge.board WHERE boardId = ?";
 export const createBoard = "INSERT INTO license_challenge.board (userId, category, title, content, image) VALUES (?, ?, ?, ?, ?)";
 export const deleteBoard = "DELETE FROM license_challenge.board WHERE boardId = ?";
-export const searchBoard = "SELECT * FROM license_challenge.board WHERE concat(title, content) regexp ?;"
+export const searchBoard = "SELECT * FROM license_challenge.board WHERE concat(title, content) regexp ?;";
+export const getBoardsOfWriter = "SELECT * FROM license_challenge.board WHERE userId = ?";
 
 export const getComment = "SELECT * FROM license_challenge.board_comment WHERE boardId = ?";
 export const createComment = "INSERT INTO license_challenge.board_comment (boardId, userId, content, level, precedingComment) VALUES (?, ?, ?, ?, ?)";
