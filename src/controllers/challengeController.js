@@ -2,7 +2,9 @@ import { mysqlConn } from "../db";
 const challengeQuery = require("../queries/challengeQuery");
 
 export const searchChallenge = async (req, res) => {
-  let { keyword } = req.params;
+  const {
+    query: { keyword },
+  } = req;
   try {
     await mysqlConn(async (conn) => {
       const query = challengeQuery.searchChallenge;   
@@ -51,11 +53,11 @@ export const getCategoryChallenge = async (req, res) => {
 
     await mysqlConn(async (conn) => {
       if(category=="전체보기"){
-        const query = challengeQuery.getAllChallenge + pageNum * 30 + "," + numOfRows;
+        const query = challengeQuery.getAllChallenge + pageNum * numOfRows+ "," + numOfRows;
         const [data, schema] = await conn.query(query);
         return res.status(200).json(data);
       } else {
-        const query = challengeQuery.getCategoryChallenge + pageNum * 30 + "," + numOfRows;
+        const query = challengeQuery.getCategoryChallenge + pageNum * numOfRows + "," + numOfRows;
         const [data, schema] = await conn.query(query,[category]);
         return res.status(200).json(data);
       }
@@ -96,34 +98,66 @@ export const createChallenge = async (req, res) => {
     console.log("s3 title이미지 경로 :", challengeTitleImage.location);
     console.log("s3 good이미지 경로 :", goodProofImage.location);
     console.log("s3 bad이미지 경로 :", badProofImage.location);
-    await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(challengeQuery.createChallenge, [
-        body.challengeTitle,
-        body.challengeCategory,
-        body.licenseId,
-        body.scheduleId,
-        user,
-        body.proofMethod,
-        body.proofAvailableDay,
-        body.proofCount,
-        body.proofCountOneDay,
-        chgStartDt,
-        chgEndDt,
-        challengeTerm,
-        challengeTitleImage.location,
-        body.challengeIntroduction,
-        goodProofImage.location,
-        badProofImage.location,
-        body.deposit,
-        body.limitPeople
-      ]);
-      //return res.json(data[0]);
-      return res.status(200).json({
-        code: 200,
-        success: true,
-        message: 'create challenge'
+
+    if(body.licenseId==''){
+      await mysqlConn(async (conn) => {
+        const [data, schema] = await conn.query(challengeQuery.createOtherChallenge, [
+          body.challengeTitle,
+          body.challengeCategory,
+          userId,
+          body.proofMethod,
+          body.proofAvailableDay,
+          body.proofCount,
+          body.proofCountOneDay,
+          chgStartDt,
+          chgEndDt,
+          challengeTerm,
+          challengeTitleImage.location,
+          body.challengeIntroduction,
+          goodProofImage.location,
+          badProofImage.location,
+          body.deposit,
+          body.limitPeople
+        ]);
+      
+        //return res.json(data[0]);
+        return res.status(200).json({
+          code: 200,
+          success: true,
+          message: 'create other challenge'
+        });
       });
+    }else{
+      await mysqlConn(async (conn) => {
+        const [data, schema] = await conn.query(challengeQuery.createLicenseChallenge, [
+          body.challengeTitle,
+          body.challengeCategory,
+          body.licenseId,
+          userId,
+          body.proofMethod,
+          body.proofAvailableDay,
+          body.proofCount,
+          body.proofCountOneDay,
+          chgStartDt,
+          chgEndDt,
+          challengeTerm,
+          challengeTitleImage.location,
+          body.challengeIntroduction,
+          goodProofImage.location,
+          badProofImage.location,
+          body.deposit,
+          body.limitPeople
+        ]);
+      
+        //return res.json(data[0]);
+        return res.status(200).json({
+          code: 200,
+          success: true,
+          message: 'create license challenge'
+        });
+    
     });
+  }
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
