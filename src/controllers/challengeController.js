@@ -1,14 +1,29 @@
 import { mysqlConn } from "../db";
 const challengeQuery = require("../queries/challengeQuery");
 
+export const getAchievementRate = async (req, res) => {
+  const userId = req.user.userId;
+  let { challengeId } = req.params;
+  try {
+    await mysqlConn(async (conn) => {
+      const query = challengeQuery.getAchievementRate;
+      const [data, schema] = await conn.query(query, [userId, challengeId]);
+      return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
 export const searchChallenge = async (req, res) => {
   const {
-    query: { keyword },
+    query: { keyword, pageNum, numOfRows }
   } = req;
   try {
     await mysqlConn(async (conn) => {
-      const query = challengeQuery.searchChallenge;
-      const [data, schema] = await conn.query(query, [keyword]);
+      const query = challengeQuery.searchChallenge + pageNum * numOfRows + "," + numOfRows;
+      const [data, schema] = await conn.query(query, [keyword, keyword]);
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -22,7 +37,7 @@ export const getOngoingChallenge = async (req, res) => {
   try {
     await mysqlConn(async (conn) => {
       const query = challengeQuery.getOngoingChallenge;
-      const [data, schema] = await conn.query(query, [userId]);
+      const [data, schema] = await conn.query(query, [userId, userId]);
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -36,7 +51,7 @@ export const getEndedChallenge = async (req, res) => {
   try {
     await mysqlConn(async (conn) => {
       const query = challengeQuery.getEndedChallenge;
-      const [data, schema] = await conn.query(query, [userId]);
+      const [data, schema] = await conn.query(query, [userId, userId]);
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -78,7 +93,6 @@ export const getCategoryChallenge = async (req, res) => {
 
 export const getChallenge = async (req, res) => {
   try {
-    console.log(req.user);
     let { challengeId } = req.params;
     await mysqlConn(async (conn) => {
       const [data, schema] = await conn.query(challengeQuery.getChallenge, [
@@ -132,6 +146,7 @@ export const createChallenge = async (req, res) => {
           body.deposit,
           body.limitPeople,
         ]);
+        const [data2, schema2] = await conn.query(challengeQuery.enterChallenge_leader, [userId]);
 
         //return res.json(data[0]);
         return res.status(200).json({
@@ -164,6 +179,7 @@ export const createChallenge = async (req, res) => {
           body.deposit,
           body.limitPeople,
         ]);
+        const [data2, schema2] = await conn.query(challengeQuery.enterChallenge_leader, [userId]);
 
         //return res.json(data[0]);
         return res.status(200).json({
