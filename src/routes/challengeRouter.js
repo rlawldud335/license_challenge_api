@@ -8,7 +8,9 @@ import {
   getEndedChallenge,
   searchChallenge,
 } from "../controllers/challengeController";
-import { upload } from "../uploadMiddlewares";
+import { 
+  challengeImgUpload
+ } from "../uploadMiddlewares";
 
 const challengeRouter = express.Router();
 
@@ -22,16 +24,18 @@ challengeRouter.get("/", getCategoryChallenge);
 challengeRouter.get("/:challengeId", getChallenge);
 //챌린지 검색
 challengeRouter.get("/search", searchChallenge);
+
 //챌린지 생성
 challengeRouter.post(
   "/",
-  upload.fields([
-    { name: "challengeTitleImage" },
-    { name: "goodProofImage" },
-    { name: "badProofImage" },
+  challengeImgUpload.fields([
+    { name: "challengeTitleImage"},
+    { name: "goodProofImage"},
+    { name: "badProofImage"},
   ]),
   createChallenge
 );
+
 //챌린지 삭제
 challengeRouter.delete("/:challengeId", deleteChallenge);
 //챌린지 참가

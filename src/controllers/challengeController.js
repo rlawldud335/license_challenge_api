@@ -56,8 +56,12 @@ export const getCategoryChallenge = async (req, res) => {
         const query = challengeQuery.getAllChallenge + pageNum * numOfRows+ "," + numOfRows;
         const [data, schema] = await conn.query(query);
         return res.status(200).json(data);
+      } else if(category=="자격증"){
+        const query = challengeQuery.getLicenseChallenge + pageNum * numOfRows + "," + numOfRows;
+        const [data, schema] = await conn.query(query,[category]);
+        return res.status(200).json(data);
       } else {
-        const query = challengeQuery.getCategoryChallenge + pageNum * numOfRows + "," + numOfRows;
+        const query = challengeQuery.getOtherChallenge + pageNum * numOfRows + "," + numOfRows;
         const [data, schema] = await conn.query(query,[category]);
         return res.status(200).json(data);
       }

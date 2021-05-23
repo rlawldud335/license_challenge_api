@@ -14,18 +14,22 @@ const s3 = new aws.S3({
 });
 
 //uploads
-const upload = multer({
+const challengeImgUpload = multer({
   storage: multerS3({
     s3,
     acl: "public-read",
     bucket: "licensechallenge",
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file, cb) => {
-      cb(null, `challenge/title/${Date.now()}`);
-    },
+      let dt = new Date().toISOString()
+      if (req.files['challengeTitleImage']) { cb(null, `challenge/title/${req.body.challengeTitle+"_"+dt}`) }
+      if (req.files['goodProofImage']) { cb(null, `challenge/goodProof/${req.body.challengeTitle+"_"+dt}`) }
+      if (req.files['badProofImage']) { cb(null, `challenge/badProof/${req.body.challengeTitle+"_"+dt}`) }
+    }
   }),
 });
-exports.upload = multer(upload);
+
+exports.challengeImgUpload = multer(challengeImgUpload);
 
 
 const boardImage = multer({
