@@ -28,10 +28,10 @@ app.use(cors());
 
 app.use(routes.auth, authRouter);
 app.use(requireToken);
+app.use(routes.point, pointRouter);
 app.use(routes.challenge, challengeRouter);
 app.use(routes.board, boardRouter);
 app.use(routes.license, licenseRouter);
 app.use(routes.licenseSchedule, licenseScheduleRouter);
-app.use(routes.point, pointRouter);
 
 export default app;

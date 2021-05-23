@@ -9,11 +9,12 @@ const NAVER_CALLBACK = "/naver/callback";
 
 //licenseSchedule
 const LICENSESCHEDULE = "/:licenseId";
+const MYSCHEDULE = "/my"; 
 
 //license
 const LICENSE = "/license";
-const LICENSEDETAIL = "/id/:licenseId";
-const SEARCHLICENSE = "/name/:searchWord";
+const LICENSEDETAIL = "/:licenseId";
+const SEARCHLICENSE = "/search";
 
 //challenge
 const CHALLENGE = "/challenge";
@@ -24,7 +25,8 @@ const FREEBOARD = "/freeboard";
 const SALEBOARD = "/saleboard";
 const FREEBOARDDETAIL = "/freeboard/:boardId";
 const SALEBOARDDETAIL = "/saleboard/:boardId";
-const SEARCHBOARD = "/content/:keyword";
+const SEARCHBOARD = "/search";
+const GETBOARDSOFWRITER = "/search-who";
 const BOARDDETAIL = "/:boardId";
 const BOARDCOMMENT = "/:boardId/comment";
 const BOARDCOMMENTDETAIL = "/:boardId/comment/:commentId";
@@ -36,7 +38,7 @@ const USER = "/user";
 const GIFTICON = "/gifticon";
 
 //point
-const POINT = "/point"
+const POINT = "/point";
 
 const routes = {
   auth: AUTH,
@@ -49,7 +51,9 @@ const routes = {
   license: LICENSE,
   licenseDetail: LICENSEDETAIL,
   searchLicense: SEARCHLICENSE,
+  getBoardsOfWriter: GETBOARDSOFWRITER,
   licenseSchedule: LICENSESCHEDULE,
+  mySchedule: MYSCHEDULE,
   challenge: CHALLENGE,
   board: BOARD,
   freeBoard: FREEBOARD,
