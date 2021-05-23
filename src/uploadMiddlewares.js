@@ -27,7 +27,6 @@ const upload = multer({
 });
 exports.upload = multer(upload);
 
-
 const boardImage = multer({
   storage: multerS3({
     s3,
