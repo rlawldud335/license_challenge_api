@@ -9,6 +9,7 @@ const NAVER_CALLBACK = "/naver/callback";
 
 //licenseSchedule
 const LICENSESCHEDULE = "/:licenseId";
+const MYSCHEDULE = "/my"; 
 
 //license
 const LICENSE = "/license";
@@ -48,6 +49,7 @@ const routes = {
   searchLicense: SEARCHLICENSE,
   getBoardsOfWriter: GETBOARDSOFWRITER,
   licenseSchedule: LICENSESCHEDULE,
+  mySchedule: MYSCHEDULE,
   challenge: CHALLENGE,
   board: BOARD,
   boardDetail: BOARDDETAIL,
