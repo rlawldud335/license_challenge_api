@@ -22,9 +22,8 @@ const CHALLENGE = "/challenge";
 const BOARD = "/board";
 const FREEBOARD = "/freeboard";
 const SALEBOARD = "/saleboard";
-const FREEBOARDDETAIL = "/:boardId";
-const SALEBOARDDETAIL = "/:boardId";
-
+const FREEBOARDDETAIL = "/freeboard/:boardId";
+const SALEBOARDDETAIL = "/saleboard/:boardId";
 const SEARCHBOARD = "/content/:keyword";
 const BOARDCOMMENT = "/:boardId/comment";
 const BOARDCOMMENTDETAIL = "/:boardId/comment/:commentId";

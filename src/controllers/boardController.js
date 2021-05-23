@@ -83,7 +83,6 @@ export const createFreeBoard = async (req, res) => {
     await mysqlConn(async (conn) => {
       await conn.query(boardQuery.createFreeBoard, [
         req.user.userId,
-        body.category,
         body.title,
         body.content,
         image.location
@@ -113,7 +112,11 @@ export const createSaleBoard = async (req, res) => {
     await mysqlConn(async (conn) => {
       await conn.query(boardQuery.createSaleBoard, [
         req.user.userId,
-        body.category,
+        body.title,
+        body.content,
+        image.location
+      ]);
+      await conn.query(boardQuery.createAttachedFile, [
         body.title,
         body.content,
         image.location
@@ -131,42 +134,18 @@ export const createSaleBoard = async (req, res) => {
   }
 };
 
-export const deleteFreeBoard = async (req, res) => {
+export const deleteBoard = async (req, res) => {
   if (req.user == 'undefined') {
     return res.status(422).send({ error: "must be sign in" });
   }
   try {
     let { boardId } = req.params;
     await mysqlConn(async (conn) => {
-      const [[board]] = await conn.query("SELECT * FROM 'board' WHERE 'boardId'=?", [boardId]);
-      if(board.userId != req.user.userId) {
-        return res.status(422).send({error: "You do not have permission"});
-      }
-      await conn.query(boardQuery.deleteFreeBoard, [boardId]);
+      await conn.query(boardQuery.deleteBoard, [boardId]);
       return res.status(200).json({
         code: 200,
         success: true,
-        message: 'delete freeboard'
-      });
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
-  }
-};
-
-export const deleteSaleBoard = async (req, res) => {
-  if (req.user == 'undefined') {
-    return res.status(422).send({ error: "must be sign in" });
-  }
-  try {
-    let { boardId } = req.params;
-    await mysqlConn(async (conn) => {
-      await conn.query(boardQuery.deleteSaleBoard, [boardId]);
-      return res.status(200).json({
-        code: 200,
-        success: true,
-        message: 'delete saleboard'
+        message: 'delete board'
       });
     });
   } catch (err) {
