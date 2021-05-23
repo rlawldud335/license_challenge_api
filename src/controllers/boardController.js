@@ -91,7 +91,7 @@ export const createFreeBoard = async (req, res) => {
       return res.status(200).json({
         code: 200,
         success: true,
-        message: 'create board',
+        message: 'create freeboard',
         image: image.location
       });
     });
@@ -121,7 +121,7 @@ export const createSaleBoard = async (req, res) => {
       return res.status(200).json({
         code: 200,
         success: true,
-        message: 'create board',
+        message: 'create saleboard',
         image: image.location
       });
     });
@@ -137,13 +137,16 @@ export const deleteFreeBoard = async (req, res) => {
   }
   try {
     let { boardId } = req.params;
-    console.log(boardId);
     await mysqlConn(async (conn) => {
+      const [[board]] = await conn.query("SELECT * FROM 'board' WHERE 'boardId'=?", [boardId]);
+      if(board.userId != req.user.userId) {
+        return res.status(422).send({error: "You do not have permission"});
+      }
       await conn.query(boardQuery.deleteFreeBoard, [boardId]);
       return res.status(200).json({
         code: 200,
         success: true,
-        message: 'delete board'
+        message: 'delete freeboard'
       });
     });
   } catch (err) {
@@ -158,13 +161,12 @@ export const deleteSaleBoard = async (req, res) => {
   }
   try {
     let { boardId } = req.params;
-    console.log(boardId);
     await mysqlConn(async (conn) => {
       await conn.query(boardQuery.deleteSaleBoard, [boardId]);
       return res.status(200).json({
         code: 200,
         success: true,
-        message: 'delete board'
+        message: 'delete saleboard'
       });
     });
   } catch (err) {

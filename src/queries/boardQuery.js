@@ -6,8 +6,8 @@ export const getSaleBoardDetail = "SELECT b.boardId, u.nickname, b.title, b.cont
 export const createFreeBoard = "INSERT INTO board (userId, category, title, content, image) VALUES (?, ?, ?, ?, ?)";
 export const createSaleBoard = "INSERT INTO board (userId, category, title, content, image) VALUES (?, ?, ?, ?, ?) AND INSERT INTO attached_file () VALUES ()";
 
-export const deleteFreeBoard = "DELETE FROM board WHERE boardId = ?";
-export const deleteSaleBoard = "DELETE b, af FROM board b INNER JOIN attached_file af WHERE b.boardId = ? AND b.boardId = af.boardId";
+export const deleteFreeBoard = "DELETE b, bc FROM board b INNER JOIN board_comment bc WHERE b.boardId = ? AND b.boardId = bc.boardId";
+export const deleteSaleBoard = "DELETE b, bc, af FROM board b INNER JOIN board_comment bc INNER JOIN attached_file af WHERE b.boardId = ? AND b.boardId = bc.boardId AND b.boardId = af.boardId"
 
 export const searchBoard = "SELECT * FROM license_challenge.board WHERE concat(title, content) regexp ?;"
 
