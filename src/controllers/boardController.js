@@ -1,17 +1,17 @@
 import { mysqlConn } from "../db";
 const boardQuery = require("../queries/boardQuery");
 
-export const getCategoryBoard = async (req, res) => {
+export const getFreeBoard = async (req, res) => {
   if (req.user == 'undefined') {
     return res.status(422).send({ error: "must be sign in" });
   }
   try {
     const {
-      query: { category, pageNum, numOfRows },
+      query: { pageNum, numOfRows },
     } = req;
     await mysqlConn(async (conn) => {
-      const query = boardQuery.getCategoryBoard + pageNum * numOfRows + "," + numOfRows;
-      const [data, schema] = await conn.query(query, [category]);
+      const query = boardQuery.getFreeBoard + pageNum * numOfRows + "," + numOfRows;
+      const [data, schema] = await conn.query(query);
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -20,14 +20,33 @@ export const getCategoryBoard = async (req, res) => {
   }
 };
 
-export const getBoard = async (req, res) => {
+export const getSaleBoard = async (req, res) => {
+  if (req.user == 'undefined') {
+    return res.status(422).send({ error: "must be sign in" });
+  }
+  try {
+    const {
+      query: { pageNum, numOfRows },
+    } = req;
+    await mysqlConn(async (conn) => {
+      const query = boardQuery.getSaleBoard + pageNum * numOfRows + "," + numOfRows;
+      const [data, schema] = await conn.query(query);
+      return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const getFreeBoardDetail = async (req, res) => {
   if (req.user == 'undefined') {
     return res.status(422).send({ error: "must be sign in" });
   }
   try {
     let { boardId } = req.params;
     await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(boardQuery.getBoard, [boardId]);
+      const [data, schema] = await conn.query(boardQuery.getFreeBoardDetail, [boardId]);
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -36,7 +55,23 @@ export const getBoard = async (req, res) => {
   }
 };
 
-export const createBoard = async (req, res) => {
+export const getSaleBoardDetail = async (req, res) => {
+  if (req.user == 'undefined') {
+    return res.status(422).send({ error: "must be sign in" });
+  }
+  try {
+    let { boardId } = req.params;
+    await mysqlConn(async (conn) => {
+      const [data, schema] = await conn.query(boardQuery.getSaleBoardDetail, [boardId]);
+      return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const createFreeBoard = async (req, res) => {
   if (req.user == 'undefined') {
     return res.status(422).send({ error: "must be sign in" });
   }
@@ -46,7 +81,7 @@ export const createBoard = async (req, res) => {
     console.log("s3 board이미지 경로 :", image.location);
 
     await mysqlConn(async (conn) => {
-      await conn.query(boardQuery.createBoard, [
+      await conn.query(boardQuery.createFreeBoard, [
         req.user.userId,
         body.category,
         body.title,
@@ -66,8 +101,37 @@ export const createBoard = async (req, res) => {
   }
 };
 
+export const createSaleBoard = async (req, res) => {
+  if (req.user == 'undefined') {
+    return res.status(422).send({ error: "must be sign in" });
+  }
+  try {
+    const body = req.body;
+    const image = req.file;
+    console.log("s3 board이미지 경로 :", image.location);
 
-export const deleteBoard = async (req, res) => {
+    await mysqlConn(async (conn) => {
+      await conn.query(boardQuery.createSaleBoard, [
+        req.user.userId,
+        body.category,
+        body.title,
+        body.content,
+        image.location
+      ]);
+      return res.status(200).json({
+        code: 200,
+        success: true,
+        message: 'create board',
+        image: image.location
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const deleteFreeBoard = async (req, res) => {
   if (req.user == 'undefined') {
     return res.status(422).send({ error: "must be sign in" });
   }
@@ -75,7 +139,28 @@ export const deleteBoard = async (req, res) => {
     let { boardId } = req.params;
     console.log(boardId);
     await mysqlConn(async (conn) => {
-      await conn.query(boardQuery.deleteBoard, [boardId]);
+      await conn.query(boardQuery.deleteFreeBoard, [boardId]);
+      return res.status(200).json({
+        code: 200,
+        success: true,
+        message: 'delete board'
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const deleteSaleBoard = async (req, res) => {
+  if (req.user == 'undefined') {
+    return res.status(422).send({ error: "must be sign in" });
+  }
+  try {
+    let { boardId } = req.params;
+    console.log(boardId);
+    await mysqlConn(async (conn) => {
+      await conn.query(boardQuery.deleteSaleBoard, [boardId]);
       return res.status(200).json({
         code: 200,
         success: true,
@@ -92,9 +177,9 @@ export const searchBoard = async (req, res) => {
   let { keyword } = req.params;
   try {
     await mysqlConn(async (conn) => {
-      const query = boardQuery.searchBoard;   
-      const [data, schema] = await conn.query(query,[keyword]);
-      return res.status(200).json(data);     
+      const query = boardQuery.searchBoard;
+      const [data, schema] = await conn.query(query, [keyword]);
+      return res.status(200).json(data);
     });
   } catch (err) {
     console.log(err);

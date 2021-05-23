@@ -20,7 +20,11 @@ const CHALLENGE = "/challenge";
 
 //board
 const BOARD = "/board";
-const BOARDDETAIL = "/:boardId";
+const FREEBOARD = "/freeboard";
+const SALEBOARD = "/saleboard";
+const FREEBOARDDETAIL = "/:boardId";
+const SALEBOARDDETAIL = "/:boardId";
+
 const SEARCHBOARD = "/content/:keyword";
 const BOARDCOMMENT = "/:boardId/comment";
 const BOARDCOMMENTDETAIL = "/:boardId/comment/:commentId";
@@ -48,7 +52,10 @@ const routes = {
   licenseSchedule: LICENSESCHEDULE,
   challenge: CHALLENGE,
   board: BOARD,
-  boardDetail: BOARDDETAIL,
+  freeBoard: FREEBOARD,
+  saleBoard: SALEBOARD,
+  freeBoardDetail: FREEBOARDDETAIL,
+  saleBoardDetail: SALEBOARDDETAIL,
   searchBoard: SEARCHBOARD,
   boardComment: BOARDCOMMENT,
   boardCommentDetail: BOARDCOMMENTDETAIL,
