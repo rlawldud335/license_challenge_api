@@ -5,7 +5,7 @@ export const getSaleBoardDetail = "SELECT b.boardId, u.nickname, u.profileImage,
 
 export const createFreeBoard = "INSERT INTO board (userId, category, title, content, image) VALUES (?, 'freeboard', ?, ?, ?)";
 export const createSaleBoard = "INSERT INTO board (userId, category, title, content, image) VALUES (?, 'saleboard', ?, ?, ?)";
-export const createAttachedFile = "INSERT INTO attached_file (boardId, previewFile, allFile, price) VALUES (SELECT, ?, ?, ?)";
+export const createAttachedFile = "INSERT INTO attached_file (boardId, previewFile, allFile, price) VALUES (LAST_INSERT_ID(), ?, ?, ?)";
 
 export const deleteBoard = "DELETE FROM board WHERE boardId = ?";
 

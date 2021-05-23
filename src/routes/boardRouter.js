@@ -20,11 +20,11 @@ boardRouter.post(routes.freeBoard, boardImage.single('image'), createFreeBoard);
 // //판매_게시글 등록
 // boardRouter.post(routes.saleBoard, boardImage.single('image'), createSaleBoard);
 
-//게시글 삭제
-boardRouter.delete("/:boardId", deleteBoard);
-
 //게시글 검색
 boardRouter.get(routes.searchBoard, searchBoard);
+
+//게시글 삭제
+boardRouter.delete(routes.boardDetail, deleteBoard);
 
 //댓글 조회
 boardRouter.get(routes.boardComment, getComment);

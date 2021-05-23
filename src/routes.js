@@ -25,6 +25,7 @@ const SALEBOARD = "/saleboard";
 const FREEBOARDDETAIL = "/freeboard/:boardId";
 const SALEBOARDDETAIL = "/saleboard/:boardId";
 const SEARCHBOARD = "/content/:keyword";
+const BOARDDETAIL = "/:boardId";
 const BOARDCOMMENT = "/:boardId/comment";
 const BOARDCOMMENTDETAIL = "/:boardId/comment/:commentId";
 
@@ -56,6 +57,7 @@ const routes = {
   freeBoardDetail: FREEBOARDDETAIL,
   saleBoardDetail: SALEBOARDDETAIL,
   searchBoard: SEARCHBOARD,
+  boardDetail: BOARDDETAIL,
   boardComment: BOARDCOMMENT,
   boardCommentDetail: BOARDCOMMENTDETAIL,
   user: USER,

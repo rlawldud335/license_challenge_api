@@ -117,9 +117,9 @@ export const createSaleBoard = async (req, res) => {
         image.location
       ]);
       await conn.query(boardQuery.createAttachedFile, [
-        body.title,
-        body.content,
-        image.location
+        body.previewFile,
+        body.allFile,
+        body.price
       ]);
       return res.status(200).json({
         code: 200,
