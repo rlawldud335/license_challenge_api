@@ -49,7 +49,7 @@ challengeRouter.get("/:challengeId/achievementRate", getAchievementRate);
 challengeRouter.delete("/:challengeId", deleteChallenge);
 
 //챌린지 참가
-challengeRouter.post("/:challengeId/enter", enterChallenge);
+//challengeRouter.post("/:challengeId/enter", enterChallenge);
 //challengeRouter.post("/payment", paymentChallenge);
 
 export default challengeRouter;
