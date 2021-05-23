@@ -31,7 +31,6 @@ const challengeImgUpload = multer({
 
 exports.challengeImgUpload = multer(challengeImgUpload);
 
-
 const boardImage = multer({
   storage: multerS3({
     s3,

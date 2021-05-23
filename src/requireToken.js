@@ -6,7 +6,6 @@ dotenv.config();
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
-  console.log(req.headers);
   if (!authorization) {
     return res.status(401).send({ error: "you must be logged in" });
   }

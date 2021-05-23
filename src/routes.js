@@ -22,6 +22,7 @@ const CHALLENGE = "/challenge";
 const BOARD = "/board";
 const BOARDDETAIL = "/:boardId";
 const SEARCHBOARD = "/search";
+const GETBOARDSOFWRITER = "/search-who"
 const BOARDCOMMENT = "/:boardId/comment";
 const BOARDCOMMENTDETAIL = "/:boardId/comment/:commentId";
 
@@ -45,6 +46,7 @@ const routes = {
   license: LICENSE,
   licenseDetail: LICENSEDETAIL,
   searchLicense: SEARCHLICENSE,
+  getBoardsOfWriter: GETBOARDSOFWRITER,
   licenseSchedule: LICENSESCHEDULE,
   challenge: CHALLENGE,
   board: BOARD,
