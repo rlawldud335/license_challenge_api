@@ -89,11 +89,12 @@ export const deleteBoard = async (req, res) => {
 };
 
 export const searchBoard = async (req, res) => {
-  let { keyword } = req.params;
   try {
+    const {
+      query: { keyword },
+    } = req;
     await mysqlConn(async (conn) => {
-      const query = boardQuery.searchBoard;   
-      const [data, schema] = await conn.query(query,[keyword]);
+      const [data, schema] = await conn.query(boardQuery.searchBoard, [keyword]);
       return res.status(200).json(data);     
     });
   } catch (err) {
@@ -118,16 +119,19 @@ export const getComment = async (req, res) => {
 };
 
 export const createComment = async (req, res) => {
+  if (req.user == 'undefined') {
+    return res.status(422).send({ error: "must be sign in" });
+  }
   try {
+    let { boardId } = req.params;
     const body = req.body;
+    const userId = req.user.userId;
+    console.log(body);
     await mysqlConn(async (conn) => {
       await conn.query(boardQuery.createComment, [
-        body.commentId,
-        body.boardId,
-        body.userId,
+        boardId,
+        userId,
         body.content,
-        new Date(body.createDt),
-        new Date(body.editDt),
         body.level,
         body.precedingComment,
       ]);
@@ -149,6 +153,26 @@ export const deleteComment = async (req, res) => {
         success: true,
         message: 'delete comment'
       });
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const updateComment = async (req, res) => {
+  try {
+    const body = req.body;
+    const userId = req.user.userId;
+    await mysqlConn(async (conn) => {
+      await conn.query(boardQuery.createComment, [
+        body.boardId,
+        userId,
+        body.content,
+        body.level,
+        body.precedingComment,
+      ]);
+      return res.status(200).json("success");
     });
   } catch (err) {
     console.log(err);
