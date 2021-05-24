@@ -11,7 +11,7 @@ export const chargePoint = async (req, res) => {
       const [data] = await conn.query(pointQuery.successPayment, [merchant_uid]);
       const [data2] = await conn.query(pointQuery.chargePoint, [userId, point, userId, point, point, userId]);
       const [data3] = await conn.query(pointQuery.plusBalance, [point, userId]);
-      
+
       const [balance] = await conn.query(pointQuery.getPoint, [userId]);
 
       return res.status(200).json({
@@ -33,17 +33,18 @@ export const withdrawPoint = async (req, res) => {
   const currentPoint = req.user.point;
   const point = req.body.point;
   try {
-    await mysqlConn(async (conn) => {
-      if (currentPoint < point) {
-        return res.status(200).json({
-          code: 200,
-          success: false,
-          message: 'Insufficient balance',
-          userId: userId,
-          balance: currentPoint,
-          "Required Point": point - currentPoint
-        });
-      } else {
+    if (currentPoint < point) {
+      return res.status(200).json({
+        code: 200,
+        success: false,
+        message: 'Insufficient balance',
+        userId: userId,
+        balance: currentPoint,
+        "Required Point": point - currentPoint
+      });
+    } else {
+      await mysqlConn(async (conn) => {
+
         const [data] = await conn.query(pointQuery.withdrawPoint, [userId, point, userId, point]);
         const [data2] = await conn.query(pointQuery.minusBalance, [point, userId]);
         const [balance] = await conn.query(pointQuery.getPoint, [userId]);
@@ -55,8 +56,9 @@ export const withdrawPoint = async (req, res) => {
           userId: balance[0]["userId"],
           balance: balance[0]["point"]
         });
-      }
-    });
+
+      });
+    }
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
@@ -135,7 +137,7 @@ export const earnPoint = async (req, res) => {
   const point = req.body.point;
   const targetType = req.body.targetType;
   const targetId = req.body.targetId;
-  
+
   try {
     await mysqlConn(async (conn) => {
       const [data] = await conn.query(pointQuery.earnPoint, [userId, targetType, targetId, point, userId, point]);
@@ -186,10 +188,10 @@ export const requestPay = async (req, res) => {
   try {
     const buyer = req.user;
     const body = req.body;
-    const merchant_uid = buyer.userId+"-"+new Date().getTime();
+    const merchant_uid = buyer.userId + "-" + new Date().getTime();
 
     await mysqlConn(async (conn) => {
-      const [data] = await conn.query(pointQuery.requestPayment, 
+      const [data] = await conn.query(pointQuery.requestPayment,
         [
           merchant_uid,
           body.amount,
@@ -198,16 +200,16 @@ export const requestPay = async (req, res) => {
           buyer.userId
         ]);
 
-        return res.status(200).json({
-          code: 200,
-          success: true,
-          message: "request payment",
-          merchant_uid: merchant_uid,
-          pay_method: body.pay_method,
-          amount: body.amount,
-          buyer_email: buyer.email,
-          buyer_tel: buyer.phoneNumber
-        });
+      return res.status(200).json({
+        code: 200,
+        success: true,
+        message: "request payment",
+        merchant_uid: merchant_uid,
+        pay_method: body.pay_method,
+        amount: body.amount,
+        buyer_email: buyer.email,
+        buyer_tel: buyer.phoneNumber
+      });
     });
   } catch (err) {
     console.log(err);

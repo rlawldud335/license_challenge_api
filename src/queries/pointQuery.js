@@ -9,4 +9,4 @@ export const getPointHistory = "SELECT * FROM point_log WHERE userId=? ORDER BY 
 
 ////////////주문정보///////////////////
 export const requestPayment = "INSERT INTO payments (merchant_uid, amount, checksum, pay_method, buyerId) VALUES (?,?,?,?,?)"
-export const successPayment = "UPDATE payments SET staus = 'success' WHERE merchant_uid = ?"
+export const successPayment = "UPDATE payments SET success = 1 WHERE merchant_uid = ?"
