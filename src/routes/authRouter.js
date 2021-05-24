@@ -8,9 +8,9 @@ dotenv.config();
 const authRouter = express.Router();
 
 authRouter.post("/signup", async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(422).send({ error: "must provide email or password" });
+  const { email, password, nickname, phoneNumber } = req.body;
+  if (!email || !password || !nickname || !phoneNumber) {
+    return res.status(422).send({ error: "must provide email, password, nickname and phone number" });
   }
   try {
     await mysqlConn(async (conn) => {
@@ -22,8 +22,8 @@ authRouter.post("/signup", async (req, res) => {
         return res.status(401).send({ error: "This email exists" });
       }
       const result = await conn.query(
-        "INSERT INTO user(email,password) VALUES(?,?)",
-        [email, password]
+        "INSERT INTO user(email,password,nickname,phoneNumber) VALUES(?,?,?,?)",
+        [email, password, nickname, phoneNumber]
       );
       const newUserId = result[0].insertId;
       console.log(newUserId);
