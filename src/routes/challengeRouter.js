@@ -7,8 +7,11 @@ import {
   getOngoingChallenge,
   getEndedChallenge,
   searchChallenge,
-  getAchievementRate
+  getAchievementRate,
+  enterChallenge,
+  updateChallenge
 } from "../controllers/challengeController";
+import { usePoint,earnPoint } from "../controllers/pointController"
 import { 
   challengeImgUpload
  } from "../uploadMiddlewares";
@@ -39,6 +42,14 @@ challengeRouter.post(
   createChallenge
 );
 
+//챌린지 참가
+challengeRouter.post("/enter", 
+  usePoint,
+  enterChallenge,
+  earnPoint
+);
+
+
 //챌린지 상세조회
 challengeRouter.get("/:challengeId", getChallenge);
 
@@ -48,8 +59,8 @@ challengeRouter.get("/:challengeId/achievementRate", getAchievementRate);
 //챌린지 삭제
 challengeRouter.delete("/:challengeId", deleteChallenge);
 
-//챌린지 참가
-//challengeRouter.post("/:challengeId/enter", enterChallenge);
-//challengeRouter.post("/payment", paymentChallenge);
+//챌린지 수정
+challengeRouter.put("/:challengeId", updateChallenge);
+
 
 export default challengeRouter;

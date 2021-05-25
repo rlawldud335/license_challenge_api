@@ -6,16 +6,19 @@ import {
     usePoint,
     withdrawPoint,
     getPointHistory,
-    earnPoint
+    earnPoint,
+    requestPay
 } from "../controllers/pointController";
 
 const pointRouter = express.Router();
 
 pointRouter.get("/", getPoint);
 pointRouter.get("/history", getPointHistory);
+
+pointRouter.post("/payment", requestPay);
 pointRouter.post("/charge", chargePoint);
 pointRouter.post("/withdraw", withdrawPoint);
-pointRouter.post("/payment", usePoint);
+pointRouter.post("/use", usePoint);
 pointRouter.post("/earn", earnPoint);
 
 
