@@ -52,7 +52,7 @@ challengeRouter.post("/enter",
 );
 
 //달성률 조회
-challengeRouter.get("/achievementRate", getAchievementRate);
+challengeRouter.get("/achievement-rate", getAchievementRate);
 
 
 //챌린지 보증금 환급_출석

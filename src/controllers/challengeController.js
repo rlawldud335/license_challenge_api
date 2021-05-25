@@ -6,7 +6,11 @@ const challengeQuery = require("../queries/challengeQuery");
 export const getAchievementRate = async (req, res) => {
   const userId = req.user.userId;
   //let { challengeId } = req.params;
-  const challengeId = req.body.challengeId;
+  const {
+    query: { challengeId }
+  } = req;
+
+  console.log("여기")
   try {
     await mysqlConn(async (conn) => {
       const query = challengeQuery.getAchievementRate;
