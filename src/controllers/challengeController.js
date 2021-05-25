@@ -113,11 +113,6 @@ export const createChallenge = async (req, res) => {
     const userId = req.user.userId;
     const chgStartDt = new Date(body.chgStartDt);
     const chgEndDt = new Date(body.chgEndDt);
-    const challengeTerm =
-      Math.ceil(
-        (chgEndDt.getTime() - chgStartDt.getTime()) / (1000 * 3600 * 24)
-      ) * body.proofCountOneDay;
-
     const challengeTitleImage = req.files["challengeTitleImage"][0];
     const goodProofImage = req.files["goodProofImage"][0];
     const badProofImage = req.files["badProofImage"][0];
@@ -137,7 +132,6 @@ export const createChallenge = async (req, res) => {
           body.proofCountOneDay,
           chgStartDt,
           chgEndDt,
-          challengeTerm,
           challengeTitleImage.location,
           body.challengeIntroduction,
           goodProofImage.location,
@@ -169,7 +163,6 @@ export const createChallenge = async (req, res) => {
           body.proofCountOneDay,
           chgStartDt,
           chgEndDt,
-          challengeTerm,
           challengeTitleImage.location,
           body.challengeIntroduction,
           goodProofImage.location,
