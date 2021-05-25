@@ -13,3 +13,7 @@ export const getAchievementRate = "SELECT challenge.challengeId, challenge.chall
 export const enterChallenge_leader = "INSERT INTO join_challenge(challengeId, userId, successCnt, failCnt, pass) VALUES (?,?,0,0,0)"
 export const enterChallenge_follower = "INSERT INTO join_challenge(challengeId, userId, successCnt, failCnt, pass) VALUES (?,?,0,0,0);" 
 export const plusJoinPeople = "UPDATE challenge SET joinPeople = joinPeople+1 WHERE challengeId = ?;"
+
+export const getChallengeEndDt = "SELECT chgEndDt FROM challenge WHERE challengeId=?"
+export const checkDepositRefund = "SELECT pass, refund_deposit, achievement_rate, ( CASE WHEN 80 <= achievement_rate THEN 100 WHEN  50 <= achievement_rate AND achievement_rate < 80 THEN achievement_rate WHEN achievement_rate < 50 THEN 0 ELSE -1 END ) AS refund_rate FROM join_challenge, (SELECT ROUND((join_challenge.successCnt/(join_challenge.successCnt+join_challenge.failCnt))*100) AS achievement_rate FROM join_challenge WHERE userId = ? AND challengeId = ?) B WHERE userId = ? AND challengeId = ?"
+export const successDepositRefund = "UPDATE join_challenge SET refund_deposit = 1 WHERE challengeId = ? AND userId = ?"
