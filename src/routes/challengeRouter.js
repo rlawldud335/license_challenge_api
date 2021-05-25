@@ -9,12 +9,13 @@ import {
   searchChallenge,
   getAchievementRate,
   enterChallenge,
-  updateChallenge
+  updateChallenge,
+  createProofPicture,
+  getProofPicture,
+  getProofPictureDetail
 } from "../controllers/challengeController";
 import { usePoint,earnPoint } from "../controllers/pointController"
-import { 
-  challengeImgUpload
- } from "../uploadMiddlewares";
+import { challengeImgUpload, proofPictureUpload } from "../uploadMiddlewares";
 
 const challengeRouter = express.Router();
 
@@ -49,7 +50,6 @@ challengeRouter.post("/enter",
   earnPoint
 );
 
-
 //챌린지 상세조회
 challengeRouter.get("/:challengeId", getChallenge);
 
@@ -62,5 +62,13 @@ challengeRouter.delete("/:challengeId", deleteChallenge);
 //챌린지 수정
 challengeRouter.put("/:challengeId", updateChallenge);
 
+//사진 인증
+challengeRouter.post("/:challengeId/proof-picture", proofPictureUpload.single('proofImage'), createProofPicture);
+
+//피드 조회
+challengeRouter.get("/:challengeId/proof-picture", getProofPicture);
+
+//피드 상세 조회
+challengeRouter.get("/:challengeId/proof-picture/:pictureId", getProofPictureDetail);
 
 export default challengeRouter;

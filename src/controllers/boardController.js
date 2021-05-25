@@ -1,7 +1,6 @@
 import { mysqlConn } from "../db";
 const boardQuery = require("../queries/boardQuery");
 
-
 export const searchBoard = async (req, res) => {
   try {
     const {
@@ -33,9 +32,6 @@ export const getBoardsOfWriter = async (req, res) => {
 };
 
 export const getFreeBoard = async (req, res) => {
-  if (req.user == 'undefined') {
-    return res.status(422).send({ error: "must be sign in" });
-  }
   try {
     const {
       query: { pageNum, numOfRows },
@@ -52,9 +48,6 @@ export const getFreeBoard = async (req, res) => {
 };
 
 export const getSaleBoard = async (req, res) => {
-  if (req.user == 'undefined') {
-    return res.status(422).send({ error: "must be sign in" });
-  }
   try {
     const {
       query: { pageNum, numOfRows },
@@ -71,9 +64,6 @@ export const getSaleBoard = async (req, res) => {
 };
 
 export const createFreeBoard = async (req, res) => {
-  if (req.user == 'undefined') {
-    return res.status(422).send({ error: "must be sign in" });
-  }
   try {
     const body = req.body;
     const image = req.files;
@@ -102,9 +92,6 @@ export const createFreeBoard = async (req, res) => {
 };
 
 export const createSaleBoard = async (req, res) => {
-  if (req.user == 'undefined') {
-    return res.status(422).send({ error: "must be sign in" });
-  }
   try {
     var path;
     const body = req.body;
@@ -151,9 +138,6 @@ export const createSaleBoard = async (req, res) => {
 };
 
 export const getFreeBoardDetail = async (req, res) => {
-  if (req.user == 'undefined') {
-    return res.status(422).send({ error: "must be sign in" });
-  }
   try {
     let { boardId } = req.params;
     await mysqlConn(async (conn) => {
@@ -167,13 +151,11 @@ export const getFreeBoardDetail = async (req, res) => {
 };
 
 export const getSaleBoardDetail = async (req, res) => {
-  if (req.user == 'undefined') {
-    return res.status(422).send({ error: "must be sign in" });
-  }
   try {
     let { boardId } = req.params;
     await mysqlConn(async (conn) => {
       const [data, schema] = await conn.query(boardQuery.getSaleBoardDetail, [boardId]);
+      if(data.allFile)
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -183,9 +165,6 @@ export const getSaleBoardDetail = async (req, res) => {
 };
 
 export const updateFreeBoard = async (req, res) => {
-  if (req.user == 'undefined') {
-    return res.status(422).send({ error: "must be sign in" });
-  }
   try {
     const body = req.body;
     const image = req.files;
@@ -215,9 +194,6 @@ export const updateFreeBoard = async (req, res) => {
 };
 
 export const updateSaleBoard = async (req, res) => {
-  if (req.user == 'undefined') {
-    return res.status(422).send({ error: "must be sign in" });
-  }
   try {
     var path;
     const body = req.body;
@@ -265,9 +241,6 @@ export const updateSaleBoard = async (req, res) => {
 };
 
 export const deleteBoard = async (req, res) => {
-  if (req.user == 'undefined') {
-    return res.status(422).send({ error: "must be sign in" });
-  }
   try {
     let { boardId } = req.params;
     await mysqlConn(async (conn) => {
@@ -300,9 +273,6 @@ export const getComment = async (req, res) => {
 };
 
 export const createComment = async (req, res) => {
-  if (req.user == 'undefined') {
-    return res.status(422).send({ error: "must be sign in" });
-  }
   try {
     let { boardId } = req.params;
     const body = req.body;

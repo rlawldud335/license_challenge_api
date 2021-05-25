@@ -13,3 +13,6 @@ export const getAchievementRate = "SELECT challenge.challengeId, challenge.chall
 export const enterChallenge_leader = "INSERT INTO join_challenge(challengeId, userId, successCnt, failCnt, pass) VALUES (?,?,0,0,0)"
 export const enterChallenge_follower = "INSERT INTO join_challenge(challengeId, userId, successCnt, failCnt, pass) VALUES (?,?,0,0,0);" 
 export const plusJoinPeople = "UPDATE challenge SET joinPeople = joinPeople+1 WHERE challengeId = ?;"
+export const createProofPicture = "INSERT INTO proof_picture(challengeId, userId, proofImage, dailyReview, reportCnt, proof) VALUES(?, ?, ?, ?, 0, 0)"
+export const getProofPicture = "SELECT proofImage FROM proof_picture WHERE challengeId = ? ORDER BY proofDt DESC LIMIT "
+export const getProofPictureDetail = "SELECT pp.pictureId, pp.proofImage, u.nickname, pp.dailyReview, pp.proofDt, pp.reportCnt FROM proof_picture pp, user u WHERE pp.userId = u.userId AND pp.challengeId = ? AND pp.pictureId = ?"

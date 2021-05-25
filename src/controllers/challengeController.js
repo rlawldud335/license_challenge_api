@@ -283,3 +283,61 @@ export const enterChallenge = async (req, res, next) => {
     //return res.status(500).json(err);
   }
 };
+
+export const createProofPicture = async (req, res) => {
+  try {
+    let { challengeId } = req.params;
+    const body = req.body;
+    const proofImage = req.file;
+
+    console.log("s3 proofImage 경로 :", proofImage.location);
+
+    await mysqlConn(async (conn) => {
+      await conn.query(challengeQuery.createProofPicture, [
+        challengeId,
+        req.user.userId,
+        proofImage.location,
+        body.dailyReview
+      ]);
+      return res.status(200).json({
+        code: 200,
+        success: true,
+        message: 'create proofPicture',
+        proofImage: proofImage.location
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const getProofPicture = async (req, res) => {
+  try {
+    let { challengeId } = req.params;
+    const {
+      query: { pageNum, numOfRows },
+    } = req;
+    await mysqlConn(async (conn) => {
+      const query = challengeQuery.getProofPicture + pageNum * numOfRows + "," + numOfRows;
+      const [data] = await conn.query(query, [challengeId]);
+      return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const getProofPictureDetail = async (req, res) => {
+  try {
+    let { challengeId, pictureId } = req.params;
+    await mysqlConn(async (conn) => {
+      const [data] = await conn.query(challengeQuery.getProofPictureDetail , [challengeId, pictureId]);
+      return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};

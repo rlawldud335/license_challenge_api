@@ -59,3 +59,17 @@ const boardFileUpload = multer({
   }),
 });
 exports.boardFileUpload = multer(boardFileUpload);
+
+const proofPictureUpload = multer({
+  storage: multerS3({
+    s3,
+    acl: "public-read",
+    bucket: "licensechallenge",
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    key: (req, file, cb) => {
+      let dt = new Date().toISOString();
+      cb(null, `challenge/proofPicture/${req.params.challengeId+"_"+req.user.userId+"_"+dt}`);
+    },
+  }),
+});
+exports.proofPictureUpload = multer(proofPictureUpload);

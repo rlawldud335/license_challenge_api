@@ -45,9 +45,9 @@ boardRouter.get(routes.freeBoardDetail, getFreeBoardDetail);
 boardRouter.get(routes.saleBoardDetail, getSaleBoardDetail);
 
 //자유_게시글 수정
-boardRouter.post(routes.freeBoardDetail, boardImgUpload.array('image', 5), updateFreeBoard);
+boardRouter.put(routes.freeBoardDetail, boardImgUpload.array('image', 5), updateFreeBoard);
 //판매_게시글 수정
-boardRouter.post(routes.saleBoardDetail,
+boardRouter.put(routes.saleBoardDetail,
     boardFileUpload.fields([
         { name: "image" },
         { name: "previewFile" },
@@ -62,7 +62,7 @@ boardRouter.delete(routes.boardDetail, deleteBoard);
 //댓글 조회
 boardRouter.get(routes.boardComment, getComment);
 //댓글 수정
-boardRouter.post(routes.boardCommentDetail, updateComment);
+boardRouter.put(routes.boardCommentDetail, updateComment);
 //댓글 등록
 boardRouter.post(routes.boardComment, createComment);
 //댓글 삭제
