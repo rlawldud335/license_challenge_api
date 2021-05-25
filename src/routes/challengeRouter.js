@@ -11,6 +11,7 @@ import {
   enterChallenge,
   updateChallenge
 } from "../controllers/challengeController";
+import { usePoint,earnPoint } from "../controllers/pointController"
 import { 
   challengeImgUpload
  } from "../uploadMiddlewares";
@@ -41,6 +42,14 @@ challengeRouter.post(
   createChallenge
 );
 
+//챌린지 참가
+challengeRouter.post("/enter", 
+  usePoint,
+  enterChallenge,
+  earnPoint
+);
+
+
 //챌린지 상세조회
 challengeRouter.get("/:challengeId", getChallenge);
 
@@ -53,7 +62,5 @@ challengeRouter.delete("/:challengeId", deleteChallenge);
 //챌린지 수정
 challengeRouter.put("/:challengeId", updateChallenge);
 
-//챌린지 참가
-challengeRouter.post("/:challengeId/enter", enterChallenge);
 
 export default challengeRouter;

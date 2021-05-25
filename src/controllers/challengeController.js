@@ -251,13 +251,14 @@ export const deleteChallenge = async (req, res) => {
 };
 
 
-export const enterChallenge = async (req, res) => {
-  let { challengeId } = req.params;
+export const enterChallenge = async (req, res, next) => {
+  //let { challengeId } = req.params;
+  const challengeId = req.body.challengeId;
   const userId = req.user.userId;
+  const deposit = req.body.deposit;
 
   try {
       await mysqlConn(async (conn) => {
-        //보증금 결제하는 코드 추가해야함
         
         const [data] = await conn.query(challengeQuery.enterChallenge_follower, [challengeId, userId]);
         const [data2] = await conn.query(challengeQuery.plusJoinPeople, [challengeId]);
@@ -268,9 +269,17 @@ export const enterChallenge = async (req, res) => {
           challengeId: challengeId,
           userId: userId
         });
+
       });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
+    console.log(err); 
+    //실패시 보증금 환불
+    req.body = {
+      "point":deposit,
+      "targetType": "챌린지 보증금 환불",
+      "targetId": challengeId
+    };
+    next();
+    //return res.status(500).json(err);
   }
 };

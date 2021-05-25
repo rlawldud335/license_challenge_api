@@ -78,7 +78,7 @@ export const withdrawPoint = async (req, res) => {
 //   }
 // };
 
-export const getPoint = async (req, res) => {
+export const getPoint = async (req, res, next) => {
   try {
     return res.status(200).json({
       userId: req.user.userId,
@@ -90,11 +90,22 @@ export const getPoint = async (req, res) => {
   }
 };
 
-export const usePoint = async (req, res) => {
+export const usePoint = async (req, res, next) => {
   const userId = req.user.userId;
-  const point = req.body.point;
-  const targetType = req.body.targetType;
-  const targetId = req.body.targetId;
+
+  console.log(req.body)
+
+  if(req.body.hasOwnProperty('challengeId')==true){
+    var targetType = "챌린지 보증금";
+    var targetId = req.body.challengeId;
+    var point = req.body.deposit;
+  } 
+  else if(req.body.hasOwnProperty('fileId')==true){
+    var targetType = "첨부파일";
+    var targetId = req.body.fileId;
+    var point = req.body.point;
+  }
+ 
 
   try {
     await mysqlConn(async (conn) => {
@@ -109,21 +120,24 @@ export const usePoint = async (req, res) => {
           balance: balance[0]["point"],
           "Required Point": point - parseInt(balance[0]["point"])
         });
+
       } else {
         const [data] = await conn.query(pointQuery.usePoint, [userId, targetType + " 결제", targetId, point, userId, point]);
         const [data2] = await conn.query(pointQuery.minusBalance, [point, userId]);
         const [balance2] = await conn.query(pointQuery.getPoint, [userId]);
 
-        return res.status(200).json({
-          code: 200,
-          success: true,
-          message: 'Use Point',
-          userId: balance2[0]["userId"],
-          targetType: targetType,
-          targetId: targetId,
-          "Payment amount": point,
-          balance: balance2[0]["point"]
-        });
+        // return res.status(200).json({
+        //   code: 200,
+        //   success: true,
+        //   message: 'Use Point',
+        //   userId: balance2[0]["userId"],
+        //   targetType: targetType,
+        //   targetId: targetId,
+        //   "Payment amount": point,
+        //   balance: balance2[0]["point"]
+        // });
+
+        next();
       }
     });
   } catch (err) {
@@ -137,6 +151,8 @@ export const earnPoint = async (req, res) => {
   const point = req.body.point;
   const targetType = req.body.targetType;
   const targetId = req.body.targetId;
+
+  console.log(req.body)
 
   try {
     await mysqlConn(async (conn) => {
