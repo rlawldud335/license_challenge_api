@@ -12,8 +12,8 @@ export const updateAttachedFile = "UPDATE attached_file SET previewFile=?, allFi
 
 export const deleteBoard = "DELETE FROM board WHERE boardId = ?";
 
-export const searchBoard = "SELECT * FROM license_challenge.board WHERE concat(title, content) regexp ?;";
-export const getBoardsOfWriter = "SELECT * FROM license_challenge.board WHERE userId = ?";
+export const searchBoard = "SELECT * FROM license_challenge.board WHERE concat(title, content) regexp ? ORDER BY createDt DESC;";
+export const getBoardsOfWriter = "SELECT * FROM license_challenge.board WHERE userId = ? ORDER BY createDt DESC";
 export const getComment = "SELECT * FROM license_challenge.board_comment WHERE boardId = ?";
 export const createComment = "INSERT INTO license_challenge.board_comment (boardId, userId, content, level, precedingComment) VALUES (?, ?, ?, ?, ?)";
 export const deleteComment = "DELETE FROM license_challenge.board_comment where boardId = ? AND commentId = ?";
