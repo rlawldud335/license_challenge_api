@@ -201,6 +201,10 @@ export const updateChallenge = async (req, res) => {
     } = req;
     const body = req.body;
 
+    const challengeTitleImage = req.files["challengeTitleImage"][0];
+    const goodProofImage = req.files["goodProofImage"][0];
+    const badProofImage = req.files["badProofImage"][0];
+
     await mysqlConn(async (conn) => {
       const [
         data
@@ -208,6 +212,7 @@ export const updateChallenge = async (req, res) => {
         body.challengeTitle,
         body.proofMethod,
         body.proofAvailableDay,
+        body.proofCount,
         body.proofCountOneDay,
         challengeTitleImage.location,
         body.challengeIntroduction,

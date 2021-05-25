@@ -75,7 +75,13 @@ challengeRouter.get("/detail", getChallenge);
 challengeRouter.delete("/", deleteChallenge);
 
 //챌린지 수정
-challengeRouter.put("/", updateChallenge);
+challengeRouter.put("/", 
+  challengeImgUpload.fields([
+    { name: "challengeTitleImage"},
+    { name: "goodProofImage"},
+    { name: "badProofImage"},
+  ]),
+updateChallenge);
 
 
 export default challengeRouter;
