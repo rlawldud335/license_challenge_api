@@ -8,7 +8,8 @@ import {
   getEndedChallenge,
   searchChallenge,
   getAchievementRate,
-  enterChallenge
+  enterChallenge,
+  updateChallenge
 } from "../controllers/challengeController";
 import { 
   challengeImgUpload
@@ -48,6 +49,9 @@ challengeRouter.get("/:challengeId/achievementRate", getAchievementRate);
 
 //챌린지 삭제
 challengeRouter.delete("/:challengeId", deleteChallenge);
+
+//챌린지 수정
+challengeRouter.put("/:challengeId", updateChallenge);
 
 //챌린지 참가
 challengeRouter.post("/:challengeId/enter", enterChallenge);

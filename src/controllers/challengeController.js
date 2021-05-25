@@ -77,11 +77,11 @@ export const getCategoryChallenge = async (req, res) => {
         const [data] = await conn.query(query);
         return res.status(200).json(data);
       } else if(category=="자격증"){
-        const query = challengeQuery.getLicenseChallenge + pageNum * numOfRows + "," + numOfRows;
+        const query = challengeQuery.getLicenseChallenges + pageNum * numOfRows + "," + numOfRows;
         const [data] = await conn.query(query,[category]);
         return res.status(200).json(data);
       } else {
-        const query = challengeQuery.getOtherChallenge + pageNum * numOfRows + "," + numOfRows;
+        const query = challengeQuery.getOtherChallenges + pageNum * numOfRows + "," + numOfRows;
         const [data] = await conn.query(query,[category]);
         return res.status(200).json(data);
       }
@@ -96,10 +96,10 @@ export const getChallenge = async (req, res) => {
   try {
     let { challengeId } = req.params;
     await mysqlConn(async (conn) => {
-      const [data] = await conn.query(challengeQuery.getChallenge, [
-        challengeId,
+      const [data] = await conn.query(challengeQuery.getOneChallenge, [
+        challengeId,challengeId
       ]);
-      return res.status(200).json(data);
+      return res.status(200).json(data[0]);
     });
   } catch (err) {
     console.log(err);
@@ -117,6 +117,7 @@ export const createChallenge = async (req, res) => {
       Math.ceil(
         (chgEndDt.getTime() - chgStartDt.getTime()) / (1000 * 3600 * 24)
       ) * body.proofCountOneDay;
+
     const challengeTitleImage = req.files["challengeTitleImage"][0];
     const goodProofImage = req.files["goodProofImage"][0];
     const badProofImage = req.files["badProofImage"][0];
@@ -192,6 +193,43 @@ export const createChallenge = async (req, res) => {
     return res.status(500).json(err);
   }
 };
+
+
+export const updateChallenge = async (req, res) => {
+  try {
+    let { challengeId } = req.params;
+    const body = req.body;
+
+      await mysqlConn(async (conn) => {
+        const [
+          data
+        ] = await conn.query(challengeQuery.updateChallenge, [
+          body.challengeTitle,
+          body.proofMethod,
+          body.proofAvailableDay,
+          body.proofCountOneDay,
+          challengeTitleImage.location,
+          body.challengeIntroduction,
+          goodProofImage.location,
+          badProofImage.location,
+          body.limitPeople,
+          challengeId
+        ]);
+
+        //return res.json(data[0]);
+        return res.status(200).json({
+          code: 200,
+          success: true,
+          message: "update challenge",
+        });
+      });
+    
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
 
 export const deleteChallenge = async (req, res) => {
   try {
