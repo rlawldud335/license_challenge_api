@@ -28,18 +28,34 @@ const challengeImgUpload = multer({
     }
   }),
 });
-
 exports.challengeImgUpload = multer(challengeImgUpload);
 
-const boardImage = multer({
+const boardImgUpload = multer({
   storage: multerS3({
     s3,
     acl: "public-read",
     bucket: "licensechallenge",
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file, cb) => {
-      cb(null, `board/image/${Date.now()}_${file.originalname}`);
+      let dt = new Date().toISOString();
+      cb(null, `board/freeboard/image/${req.body.title+"_"+dt}`);
     },
   }),
 });
-exports.boardImage = multer(boardImage);
+exports.boardImgUpload = multer(boardImgUpload);
+
+const boardFileUpload = multer({
+  storage: multerS3({
+    s3,
+    acl: "public-read",
+    bucket: "licensechallenge",
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    key: (req, file, cb) => {
+      let dt = new Date().toISOString();
+      if (req.files['image']) { cb(null, `board/saleboard/image/${req.body.title+"_"+dt}`) }
+      if (req.files['previewFile']) { cb(null, `board/saleboard/previewFile/${req.body.title+"_"+dt}`) }
+      if (req.files['allFile']) { cb(null, `board/saleboard/allFile/${req.body.title+"_"+dt}`) }
+    },
+  }),
+});
+exports.boardFileUpload = multer(boardFileUpload);

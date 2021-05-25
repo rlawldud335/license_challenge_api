@@ -21,12 +21,12 @@ const CHALLENGE = "/challenge";
 
 //board
 const BOARD = "/board";
+const SEARCHBOARD = "/search";
+const GETBOARDSOFWRITER = "/search-who";
 const FREEBOARD = "/freeboard";
 const SALEBOARD = "/saleboard";
 const FREEBOARDDETAIL = "/freeboard/:boardId";
 const SALEBOARDDETAIL = "/saleboard/:boardId";
-const SEARCHBOARD = "/search";
-const GETBOARDSOFWRITER = "/search-who";
 const BOARDDETAIL = "/:boardId";
 const BOARDCOMMENT = "/:boardId/comment";
 const BOARDCOMMENTDETAIL = "/:boardId/comment/:commentId";
@@ -51,16 +51,16 @@ const routes = {
   license: LICENSE,
   licenseDetail: LICENSEDETAIL,
   searchLicense: SEARCHLICENSE,
-  getBoardsOfWriter: GETBOARDSOFWRITER,
   licenseSchedule: LICENSESCHEDULE,
   mySchedule: MYSCHEDULE,
   challenge: CHALLENGE,
   board: BOARD,
+  searchBoard: SEARCHBOARD,
+  getBoardsOfWriter: GETBOARDSOFWRITER,
   freeBoard: FREEBOARD,
   saleBoard: SALEBOARD,
   freeBoardDetail: FREEBOARDDETAIL,
   saleBoardDetail: SALEBOARDDETAIL,
-  searchBoard: SEARCHBOARD,
   boardDetail: BOARDDETAIL,
   boardComment: BOARDCOMMENT,
   boardCommentDetail: BOARDCOMMENTDETAIL,

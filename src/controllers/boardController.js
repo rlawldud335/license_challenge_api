@@ -1,6 +1,37 @@
 import { mysqlConn } from "../db";
 const boardQuery = require("../queries/boardQuery");
 
+
+export const searchBoard = async (req, res) => {
+  try {
+    const {
+      query: { keyword },
+    } = req;
+    await mysqlConn(async (conn) => {
+      const [data, schema] = await conn.query(boardQuery.searchBoard, [keyword]);
+      return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const getBoardsOfWriter = async (req, res) => {
+  try {
+    const {
+      query: { writer },
+    } = req;
+    await mysqlConn(async (conn) => {
+      const [data, schema] = await conn.query(boardQuery.getBoardsOfWriter, [writer]);
+      return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
 export const getFreeBoard = async (req, res) => {
   if (req.user == 'undefined') {
     return res.status(422).send({ error: "must be sign in" });
@@ -32,6 +63,86 @@ export const getSaleBoard = async (req, res) => {
       const query = boardQuery.getSaleBoard + pageNum * numOfRows + "," + numOfRows;
       const [data, schema] = await conn.query(query);
       return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const createFreeBoard = async (req, res) => {
+  if (req.user == 'undefined') {
+    return res.status(422).send({ error: "must be sign in" });
+  }
+  try {
+    const body = req.body;
+    const image = req.files;
+    const path = image.map(img => img.location);
+
+    console.log("s3 freeboardImage 경로 :", path);
+
+    await mysqlConn(async (conn) => {
+      await conn.query(boardQuery.createFreeBoard, [
+        req.user.userId,
+        body.title,
+        body.content,
+        path.toString()
+      ]);
+      return res.status(200).json({
+        code: 200,
+        success: true,
+        message: 'create freeboard',
+        image: path
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const createSaleBoard = async (req, res) => {
+  if (req.user == 'undefined') {
+    return res.status(422).send({ error: "must be sign in" });
+  }
+  try {
+    var path;
+    const body = req.body;
+
+    if (req.files["image"] && req.files["image"].length > 0) {
+      const image = req.files["image"][0];
+      path = image.location.toString();
+    } else {
+      path = "";
+    }
+    const previewFile = req.files["previewFile"][0];
+    const allFile = req.files["allFile"][0];
+
+    console.log("s3 saleBoardImage 경로 :", path);
+    console.log("s3 previewFile 경로 :", previewFile.location);
+    console.log("s3 allFile 경로 :", allFile.location);
+
+    await mysqlConn(async (conn) => {
+      const [data] = await conn.query(boardQuery.createSaleBoard, [
+        req.user.userId,
+        body.title,
+        body.content,
+        path
+      ]);
+      await conn.query(boardQuery.createAttachedFile, [
+        data.insertId,
+        previewFile.location.toString(),
+        allFile.location.toString(),
+        body.price
+      ]);
+      return res.status(200).json({
+        code: 200,
+        success: true,
+        message: 'create saleboard',
+        image: path,
+        previewFile: previewFile.location,
+        allFile: allFile.location
+      });
     });
   } catch (err) {
     console.log(err);
@@ -71,27 +182,30 @@ export const getSaleBoardDetail = async (req, res) => {
   }
 };
 
-export const createFreeBoard = async (req, res) => {
+export const updateFreeBoard = async (req, res) => {
   if (req.user == 'undefined') {
     return res.status(422).send({ error: "must be sign in" });
   }
   try {
     const body = req.body;
-    const image = req.file;
-    console.log("s3 board이미지 경로 :", image.location);
+    const image = req.files;
+    const path = image.map(img => img.location);
+    let { boardId } = req.params;
+
+    console.log("s3 freeboardImage 경로 :", path);
 
     await mysqlConn(async (conn) => {
-      await conn.query(boardQuery.createFreeBoard, [
-        req.user.userId,
+      await conn.query(boardQuery.updateBoard, [
         body.title,
         body.content,
-        image.location
+        path.toString(),
+        boardId
       ]);
       return res.status(200).json({
         code: 200,
         success: true,
-        message: 'create freeboard',
-        image: image.location
+        message: 'update freeboard',
+        image: path
       });
     });
   } catch (err) {
@@ -100,32 +214,48 @@ export const createFreeBoard = async (req, res) => {
   }
 };
 
-export const createSaleBoard = async (req, res) => {
+export const updateSaleBoard = async (req, res) => {
   if (req.user == 'undefined') {
     return res.status(422).send({ error: "must be sign in" });
   }
   try {
+    var path;
     const body = req.body;
-    const image = req.file;
-    console.log("s3 board이미지 경로 :", image.location);
+    let { boardId } = req.params;
+
+    if (req.files["image"] && req.files["image"].length > 0) {
+      const image = req.files["image"][0];
+      path = image.location.toString();
+    } else {
+      path = "";
+    }
+    const previewFile = req.files["previewFile"][0];
+    const allFile = req.files["allFile"][0];
+
+    console.log("s3 saleBoardImage 경로 :", path);
+    console.log("s3 previewFile 경로 :", previewFile.location);
+    console.log("s3 allFile 경로 :", allFile.location);
 
     await mysqlConn(async (conn) => {
-      await conn.query(boardQuery.createSaleBoard, [
-        req.user.userId,
+      await conn.query(boardQuery.updateBoard, [
         body.title,
         body.content,
-        image.location
+        path,
+        boardId
       ]);
-      await conn.query(boardQuery.createAttachedFile, [
-        body.previewFile,
-        body.allFile,
-        body.price
+      await conn.query(boardQuery.updateAttachedFile, [
+        previewFile.location.toString(),
+        allFile.location.toString(),
+        body.price,
+        boardId
       ]);
       return res.status(200).json({
         code: 200,
         success: true,
-        message: 'create saleboard',
-        image: image.location
+        message: 'update saleboard',
+        image: path,
+        previewFile: previewFile.location,
+        allFile: allFile.location
       });
     });
   } catch (err) {
@@ -147,36 +277,6 @@ export const deleteBoard = async (req, res) => {
         success: true,
         message: 'delete board'
       });
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
-  }
-};
-
-export const searchBoard = async (req, res) => {
-  try {
-    const {
-      query: { keyword },
-    } = req;
-    await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(boardQuery.searchBoard, [keyword]);
-      return res.status(200).json(data);     
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
-  }
-};
-
-export const getBoardsOfWriter = async (req, res) => {
-  try {
-    const {
-      query: { writer },
-    } = req;
-    await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(boardQuery.getBoardsOfWriter, [writer]);
-      return res.status(200).json(data);     
     });
   } catch (err) {
     console.log(err);
@@ -215,6 +315,10 @@ export const createComment = async (req, res) => {
         body.content,
         body.level,
         body.precedingComment,
+      ]);
+      await conn.query(boardQuery.updateComment, [
+        body.content,
+        commentId
       ]);
       return res.status(200).json({
         code: 200,
