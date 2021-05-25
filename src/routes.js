@@ -33,6 +33,8 @@ const BOARDCOMMENTDETAIL = "/:boardId/comment/:commentId";
 
 //user
 const USER = "/user";
+const USERINFO = "/my-info";
+const WITHDRAWAL = "/withdrawal";
 
 //gifticon
 const GIFTICON = "/gifticon";
@@ -65,6 +67,8 @@ const routes = {
   boardComment: BOARDCOMMENT,
   boardCommentDetail: BOARDCOMMENTDETAIL,
   user: USER,
+  userInfo: USERINFO,
+  withdrawal: WITHDRAWAL,
   gifticon: GIFTICON,
   point: POINT,
 };
