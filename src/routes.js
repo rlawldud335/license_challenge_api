@@ -42,6 +42,11 @@ const GIFTICON = "/gifticon";
 //point
 const POINT = "/point";
 
+//report
+const REPORT = "/report";
+const REPORTBOARD = "/board/:boardId";
+const REPORTPROOF = "/proof/:proofImageId"
+
 const routes = {
   auth: AUTH,
   github: GITHUB,
@@ -69,6 +74,9 @@ const routes = {
   user: USER,
   userInfo: USERINFO,
   withdrawal: WITHDRAWAL,
+  report: REPORT,
+  reportBoard: REPORTBOARD,
+  reportProof: REPORTPROOF,
   gifticon: GIFTICON,
   point: POINT,
 };
