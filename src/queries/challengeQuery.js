@@ -16,6 +16,14 @@ export const plusJoinPeople = "UPDATE challenge SET joinPeople = joinPeople+1 WH
 export const getChallengeEndDt = "SELECT chgEndDt FROM challenge WHERE challengeId=?"
 export const checkDepositRefund = "SELECT pass, refund_deposit, achievement_rate, ( CASE WHEN 80 <= achievement_rate THEN 100 WHEN  50 <= achievement_rate AND achievement_rate < 80 THEN achievement_rate WHEN achievement_rate < 50 THEN 0 ELSE -1 END ) AS refund_rate FROM join_challenge, (SELECT ROUND((join_challenge.successCnt/(join_challenge.successCnt+join_challenge.failCnt))*100) AS achievement_rate FROM join_challenge WHERE userId = ? AND challengeId = ?) B WHERE userId = ? AND challengeId = ?"
 export const successDepositRefund = "UPDATE join_challenge SET refund_deposit = 1 WHERE challengeId = ? AND userId = ?"
+
 export const createProofPicture = "INSERT INTO proof_picture(challengeId, userId, proofImage, dailyReview, reportCnt, proof) VALUES(?, ?, ?, ?, 0, 0)"
-export const getProofPicture = "SELECT proofImage FROM proof_picture WHERE challengeId = ? ORDER BY proofDt DESC LIMIT "
+export const getProofPicture = "SELECT pictureId, proofImage FROM proof_picture WHERE challengeId = ? ORDER BY proofDt DESC LIMIT "
 export const getProofPictureDetail = "SELECT pp.pictureId, pp.proofImage, u.nickname, pp.dailyReview, pp.proofDt, pp.reportCnt FROM proof_picture pp, user u WHERE pp.userId = u.userId AND pp.challengeId = ? AND pp.pictureId = ?"
+
+export const getToday = "SELECT case DAYOFWEEK(CURDATE()) when '1' then '일' when '2' then '월' when '3' then '화' when '4' then '수' when '5' then '목' when '6' then '금' when '7' then '토' end as dayofweek"
+export const getProofAvailableDay = "SELECT proofAvailableDay from challenge where challengeId = ?"
+export const getProofCntOneDay= "SELECT proofCountOneDay FROM challenge WHERE challengeId = ?"
+export const getProofCnt = "SELECT proofCount from challenge where challengeId = ?"
+export const getUserDayCnt = "SELECT COUNT(*) AS userDayCnt FROM proof_picture WHERE challengeId = ? AND userId = ? AND date(proofDt) = date(curdate())"
+export const getUserWeekCnt = "SELECT COUNT(*) AS userWeekCnt FROM proof_picture WHERE date_format(proofDt,'%Y-%m-%d') BETWEEN (SELECT ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 0 )) AND (SELECT ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 6 )) AND challengeId = ? AND userId = ?"
