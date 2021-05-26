@@ -9,7 +9,9 @@ import {
   searchChallenge,
   getAchievementRate,
   enterChallenge,
-  updateChallenge
+  updateChallenge,
+  refundChallengeDeposit,
+  refundChallengeBonus
 } from "../controllers/challengeController";
 import { usePoint,earnPoint } from "../controllers/pointController"
 import { 
@@ -49,18 +51,37 @@ challengeRouter.post("/enter",
   earnPoint
 );
 
+//달성률 조회
+challengeRouter.get("/:challengeId/achievement-rate", getAchievementRate);
+
+
+//챌린지 보증금 환급_출석
+challengeRouter.post("/refund-deposit", 
+  refundChallengeDeposit,
+  earnPoint
+);
+
+//챌린지 보너스 환급_자격증합격시
+// challengeRouter.post("/refund-bonus", 
+//   refundChallengeBonus,
+//   earnPoint
+// );
+
+
+//챌린지 수정
+challengeRouter.put("/", 
+  challengeImgUpload.fields([
+    { name: "challengeTitleImage"},
+    { name: "goodProofImage"},
+    { name: "badProofImage"},
+  ]),
+updateChallenge);
 
 //챌린지 상세조회
 challengeRouter.get("/:challengeId", getChallenge);
 
-//달성률 조회
-challengeRouter.get("/:challengeId/achievementRate", getAchievementRate);
-
 //챌린지 삭제
 challengeRouter.delete("/:challengeId", deleteChallenge);
-
-//챌린지 수정
-challengeRouter.put("/:challengeId", updateChallenge);
 
 
 export default challengeRouter;
