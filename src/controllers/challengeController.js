@@ -5,10 +5,10 @@ const challengeQuery = require("../queries/challengeQuery");
 
 export const getAchievementRate = async (req, res) => {
   const userId = req.user.userId;
-  //let { challengeId } = req.params;
-  const {
-    query: { challengeId }
-  } = req;
+  let { challengeId } = req.params;
+  // const {
+  //   query: { challengeId }
+  // } = req;
 
   console.log("여기")
   try {
@@ -100,10 +100,10 @@ export const getCategoryChallenge = async (req, res) => {
 
 export const getChallenge = async (req, res) => {
   try {
-    const {
-      query: { challengeId }
-    } = req;
-    //let { challengeId } = req.params;
+    // const {
+    //   query: { challengeId }
+    // } = req;
+    let { challengeId } = req.params;
     await mysqlConn(async (conn) => {
       const [data] = await conn.query(challengeQuery.getOneChallenge, [
         challengeId, challengeId
@@ -243,10 +243,10 @@ export const updateChallenge = async (req, res) => {
 
 export const deleteChallenge = async (req, res) => {
   try {
-    //let { challengeId } = req.params;
-    const {
-      query: { challengeId }
-    } = req;
+    let { challengeId } = req.params;
+    // const {
+    //   query: { challengeId }
+    // } = req;
     await mysqlConn(async (conn) => {
       const [data] = await conn.query(challengeQuery.deleteChallenge, [
         challengeId,

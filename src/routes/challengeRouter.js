@@ -52,7 +52,7 @@ challengeRouter.post("/enter",
 );
 
 //달성률 조회
-challengeRouter.get("/achievement-rate", getAchievementRate);
+challengeRouter.get("/:challengeId/achievement-rate", getAchievementRate);
 
 
 //챌린지 보증금 환급_출석
@@ -68,12 +68,6 @@ challengeRouter.post("/refund-deposit",
 // );
 
 
-//챌린지 상세조회
-challengeRouter.get("/detail", getChallenge);
-
-//챌린지 삭제
-challengeRouter.delete("/", deleteChallenge);
-
 //챌린지 수정
 challengeRouter.put("/", 
   challengeImgUpload.fields([
@@ -82,6 +76,12 @@ challengeRouter.put("/",
     { name: "badProofImage"},
   ]),
 updateChallenge);
+
+//챌린지 상세조회
+challengeRouter.get("/:challengeId", getChallenge);
+
+//챌린지 삭제
+challengeRouter.delete("/:challengeId", deleteChallenge);
 
 
 export default challengeRouter;
