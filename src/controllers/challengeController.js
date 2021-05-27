@@ -521,7 +521,7 @@ export const refundChallengeBonus = async (req, res, next) => {
       const [data] = await conn.query(challengeQuery.getDepositBalance, [challengeId]);
       const balance = data[0].balance_deposit;
 
-      if (data[0].refund) {
+      if (!data[0].refund) {
         return res.status(200).json({
           code: 200,
           success: false,
@@ -614,15 +614,19 @@ export const refundDeposit_Auto = async function () {
             refundAmount = deposit * (achievement_rate / 100);
             allAmount += refundAmount;
           }
+          else if(achievement_rate<50){
+            refundAmount = 0;
+          }
 
+          
           refundDepositPoint(userId, refundAmount, challengeId);
           await conn.query(challengeQuery.successDepositRefund, [challengeId, userId]);
-          await conn.query(challengeQuery.successDepositRefund2, [challengeId, allAmount]);
         }
-
+        await conn.query(challengeQuery.successDepositRefund2, [allAmount, challengeId]);
+        console.log("보증금 자동환급 성공! 챌린지ID:",challengeId, "환급총액:", allAmount);
       }
     });
-    console.log("보증금 자동환급 성공!")
+    
   } catch (err) {
     console.log(err);
   }
