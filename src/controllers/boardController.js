@@ -277,7 +277,8 @@ export const purchaseFile = async (req, res, next) => {
   }
   try {
     await mysqlConn(async (conn) => {
-      await conn.query(boardQuery.purchaseFile, [userId + ", ", boardId, fileId]);
+      const [purchaser] = await conn.query(boardQuery.purchaserId, [userId + ", ", fileId]);
+      await conn.query(boardQuery.purchaseFile, [purchaser[0]["purchaser"], fileId]);
       
       const [sellerId] = await conn.query(pointQuery.getSellerId, [boardId]);
       await conn.query(pointQuery.earnPoint, [sellerId[0]["userId"], targetType, targetId, point, sellerId[0]["userId"], point]);
