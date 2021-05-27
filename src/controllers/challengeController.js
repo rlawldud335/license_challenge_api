@@ -1,7 +1,6 @@
 import { mysqlConn } from "../db";
 import { usePoint } from "../controllers/pointController"
 import { now } from "mongoose";
-import { KinesisVideoArchivedMedia } from "aws-sdk";
 const challengeQuery = require("../queries/challengeQuery");
 
 export const getAchievementRate = async (req, res) => {

@@ -1,5 +1,6 @@
 import { mysqlConn } from "../db";
 const boardQuery = require("../queries/boardQuery");
+const pointQuery = require("../queries/pointQuery");
 
 export const searchBoard = async (req, res) => {
   try {
@@ -7,7 +8,7 @@ export const searchBoard = async (req, res) => {
       query: { keyword },
     } = req;
     await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(boardQuery.searchBoard, [keyword]);
+      const [data] = await conn.query(boardQuery.searchBoard, [keyword]);
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -22,7 +23,7 @@ export const getBoardsOfWriter = async (req, res) => {
       query: { writer },
     } = req;
     await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(boardQuery.getBoardsOfWriter, [writer]);
+      const [data] = await conn.query(boardQuery.getBoardsOfWriter, [writer]);
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -38,7 +39,7 @@ export const getFreeBoard = async (req, res) => {
     } = req;
     await mysqlConn(async (conn) => {
       const query = boardQuery.getFreeBoard + pageNum * numOfRows + "," + numOfRows;
-      const [data, schema] = await conn.query(query);
+      const [data] = await conn.query(query);
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -54,7 +55,7 @@ export const getSaleBoard = async (req, res) => {
     } = req;
     await mysqlConn(async (conn) => {
       const query = boardQuery.getSaleBoard + pageNum * numOfRows + "," + numOfRows;
-      const [data, schema] = await conn.query(query);
+      const [data] = await conn.query(query);
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -141,7 +142,7 @@ export const getFreeBoardDetail = async (req, res) => {
   try {
     let { boardId } = req.params;
     await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(boardQuery.getFreeBoardDetail, [boardId]);
+      const [data] = await conn.query(boardQuery.getFreeBoardDetail, [boardId]);
       return res.status(200).json(data);
     });
   } catch (err) {
@@ -154,9 +155,16 @@ export const getSaleBoardDetail = async (req, res) => {
   try {
     let { boardId } = req.params;
     await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(boardQuery.getSaleBoardDetail, [boardId]);
-      if(data.allFile)
-      return res.status(200).json(data);
+      var purchaser = await conn.query(boardQuery.getPurchaser, [boardId]);
+      var value = purchaser[0][0].purchaser.indexOf(req.user.userId);
+
+      if(value != -1) {
+        const [data] = await conn.query(boardQuery.getSaleBoardPurchaser, [boardId]);
+        return res.status(200).json(data);
+      } else {
+        const [data] = await conn.query(boardQuery.getSaleBoardNoPurchaser, [boardId]);
+        return res.status(200).json(data);
+      }
     });
   } catch (err) {
     console.log(err);
@@ -257,13 +265,24 @@ export const deleteBoard = async (req, res) => {
   }
 };
 
+// export const paymentPoint = async (req, res, next) => {
+//   try {
+//     let { boardId } = req.params;
+//     await mysqlConn(async (conn) => {
+
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json(err);
+//   }
+// }
 ////////////////////////////////COMMENT/////////////////////////////////////////
 
 export const getComment = async (req, res) => {
   try {
     let { boardId } = req.params;
     await mysqlConn(async (conn) => {
-      const [data, schema] = await conn.query(boardQuery.getComment, [boardId]);
+      const [data] = await conn.query(boardQuery.getComment, [boardId]);
       return res.status(200).json(data);
     });
   } catch (err) {
