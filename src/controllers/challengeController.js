@@ -7,16 +7,42 @@ const challengeQuery = require("../queries/challengeQuery");
 export const getAchievementRate = async (req, res) => {
   const userId = req.user.userId;
   let { challengeId } = req.params;
-  // const {
-  //   query: { challengeId }
-  // } = req;
 
-  console.log("여기")
   try {
     await mysqlConn(async (conn) => {
       const query = challengeQuery.getAchievementRate;
       const [data] = await conn.query(query, [userId, challengeId]);
-      return res.status(200).json(data);
+      if(data[0].pass){
+        data[0].pass = "인증완료"
+      }else if(!data[0].pass) {
+        data[0].pass = "인증미완료"
+      }
+      return res.status(200).json(data[0]);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const getAchievementRateInfo = async (req, res) => {
+  const userId = req.user.userId;
+  let { challengeId } = req.params;
+
+  try {
+    await mysqlConn(async (conn) => {
+      const [countAllchallengers] = await conn.query(challengeQuery.countAllchallengers, [challengeId]);
+      const [countPasschallengers] = await conn.query(challengeQuery.countPasschallengers, [challengeId]);
+      const [countDailyProofSuccess] = await conn.query(challengeQuery.getDailyProofSuccess, [challengeId]);
+      const [achievementStatistics] = await conn.query(challengeQuery.getAchievementStatistics, [challengeId]);
+
+      
+      return res.status(200).json({
+        countAllchallengers: countAllchallengers[0].all_challengers,
+        countPasschallengers: countPasschallengers[0].pass_challengers,
+        countDailyProofSuccess: countDailyProofSuccess.length,
+        achievementStatistics: achievementStatistics[0]
+      });
     });
   } catch (err) {
     console.log(err);
@@ -299,7 +325,7 @@ export const enterChallenge = async (req, res, next) => {
   try {
     await mysqlConn(async (conn) => {
 
-      const [data] = await conn.query(challengeQuery.enterChallenge_follower, [challengeId, userId]);
+      const [data] = await conn.query(challengeQuery.enterChallenge_challenger, [challengeId, userId]);
       const [data2] = await conn.query(challengeQuery.plusJoinPeople, [challengeId]);
       return res.status(200).json({
         code: 200,
@@ -623,9 +649,10 @@ export const refundDeposit_Auto = async function () {
           await conn.query(challengeQuery.successDepositRefund, [challengeId, userId]);
         }
         await conn.query(challengeQuery.successDepositRefund2, [allAmount, challengeId]);
-        console.log("보증금 자동환급 성공! 챌린지ID:",challengeId, "환급총액:", allAmount);
+        console.log("챌린지ID:",challengeId, "환급총액:", allAmount);
       }
     });
+    console.log("보증금 자동환급 성공!");
     
   } catch (err) {
     console.log(err);

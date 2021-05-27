@@ -15,7 +15,8 @@ import {
   createProofPicture,
   getProofPicture,
   getProofPictureDetail,
-  refundDeposit_Auto
+  refundDeposit_Auto,
+  getAchievementRateInfo
 } from "../controllers/challengeController";
 import { usePoint,earnPoint } from "../controllers/pointController"
 import { challengeImgUpload, proofPictureUpload } from "../uploadMiddlewares";
@@ -68,6 +69,9 @@ updateChallenge);
 
 //달성률 조회
 challengeRouter.get("/:challengeId/achievement-rate", getAchievementRate);
+
+//챌린지 참여자 달성률 통계 조회
+challengeRouter.get("/:challengeId/achievement-rate-info", getAchievementRateInfo);
 
 //챌린지 상세조회
 challengeRouter.get("/:challengeId", getChallenge);
