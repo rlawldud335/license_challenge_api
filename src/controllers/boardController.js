@@ -265,51 +265,42 @@ export const deleteBoard = async (req, res) => {
   }
 };
 
-// export const paymentPoint = async (req, res, next) => {
-//   try {
-//     let { boardId } = req.params;    
-//     await mysqlConn(async (conn) => {
-
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).json(err);
-//   }
-// }
-
-
 export const purchaseFile = async (req, res, next) => {
+  let { boardId } = req.params;
   const fileId = req.body.fileId;
   const userId = req.user.userId;
-  const point = req.body.point;
 
+  if (req.body.hasOwnProperty('fileId')) {
+    var targetType = "첨부파일 판매";
+    var targetId = req.body.fileId;
+    var point = req.body.point;
+  }
   try {
     await mysqlConn(async (conn) => {
-
-      //쿼리쓰기
+      await conn.query(boardQuery.purchaseFile, [userId + ", ", boardId, fileId]);
+      
+      const [sellerId] = await conn.query(pointQuery.getSellerId, [boardId]);
+      await conn.query(pointQuery.earnPoint, [sellerId[0]["userId"], targetType, targetId, point, sellerId[0]["userId"], point]);
+      await conn.query(pointQuery.plusBalance, [point, sellerId[0]["userId"]]);
+      const [balance1] = await conn.query(pointQuery.getPoint, [sellerId[0]["userId"]]);
 
       return res.status(200).json({
         code: 200,
         success: true,
-        message: "purchase File",
+        message: "purchase File & Earn Point",
+        boardId: boardId,
         fileId: fileId,
-        point: point,
-        userId: userId
+        purchaserId : userId,
+        purchaserPoint : point,
+        sellerId: balance1[0]["userId"],
+        sellerPoint: balance1[0]["point"]
       });
-
     });
   } catch (err) {
     console.log(err);
-    //실패시 보증금 환불
-    req.body = {
-      "point": point,
-      "targetType": "첨부파일 환불",
-      "targetId": fileId
-    };
-    next();
+    return res.status(500).json(err);
   }
 };
-
 
 
 ////////////////////////////////COMMENT/////////////////////////////////////////

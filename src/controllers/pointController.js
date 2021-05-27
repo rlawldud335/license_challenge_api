@@ -95,22 +95,22 @@ export const usePoint = async (req, res, next) => {
 
   console.log(req.body)
 
-  if(req.body.hasOwnProperty('create')){
+  if (req.body.hasOwnProperty('create')) {
     var targetType = "챌린지 생성";
     var targetId = req.body.challengeId;
     var point = req.body.deposit;
   }
-  else if(req.body.hasOwnProperty('challengeId')){
+  else if (req.body.hasOwnProperty('challengeId')) {
     var targetType = "챌린지 보증금";
     var targetId = req.body.challengeId;
     var point = req.body.deposit;
-  } 
-  else if(req.body.hasOwnProperty('fileId')){
+  }
+  else if (req.body.hasOwnProperty('fileId')) {
     var targetType = "첨부파일";
     var targetId = req.body.fileId;
     var point = req.body.point;
   }
- 
+
 
   try {
     await mysqlConn(async (conn) => {
@@ -161,8 +161,8 @@ export const earnPoint = async (req, res) => {
 
   try {
     await mysqlConn(async (conn) => {
-      const [data] = await conn.query(pointQuery.earnPoint, [userId, targetType, targetId, point, userId, point]);
-      const [data2] = await conn.query(pointQuery.plusBalance, [point, userId]);
+      await conn.query(pointQuery.earnPoint, [userId, targetType, targetId, point, userId, point]);
+      await conn.query(pointQuery.plusBalance, [point, userId]);
       const [balance2] = await conn.query(pointQuery.getPoint, [userId]);
 
       return res.status(200).json({
@@ -175,7 +175,6 @@ export const earnPoint = async (req, res) => {
         "Earn amount": point,
         balance: balance2[0]["point"]
       });
-
     });
   } catch (err) {
     console.log(err);
@@ -183,9 +182,9 @@ export const earnPoint = async (req, res) => {
   }
 };
 
-export const refundDepositPoint = async function(userId,point,targetId){
+export const refundDepositPoint = async function (userId, point, targetId) {
   try {
-    let targetType="챌린지 보증금 환급";
+    let targetType = "챌린지 보증금 환급";
     await mysqlConn(async (conn) => {
       const [data] = await conn.query(pointQuery.earnPoint, [userId, targetType, targetId, point, userId, point]);
       const [data2] = await conn.query(pointQuery.plusBalance, [point, userId]);
