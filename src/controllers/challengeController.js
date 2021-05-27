@@ -1,7 +1,6 @@
 import { mysqlConn } from "../db";
 import { refundDepositPoint } from "../controllers/pointController"
 import { now } from "mongoose";
-import { KinesisVideoArchivedMedia } from "aws-sdk";
 const challengeQuery = require("../queries/challengeQuery");
 
 export const getAchievementRate = async (req, res) => {
@@ -481,15 +480,15 @@ export const createProofPicture = async (req, res) => {
             proofImage: proofImage.location
           });
         } else {
-          return res.status(200).json({
-            code: 200,
+          return res.status(401).json({
+            code: 401,
             success: false,
             message: "You have already completed the number of authentications"
           });
         }
       } else {
-        return res.status(200).json({
-          code: 200,
+        return res.status(401).json({
+          code: 401,
           success: false,
           message: "It is not a certifiable day of the week"
         });

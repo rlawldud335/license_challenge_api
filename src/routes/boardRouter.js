@@ -5,10 +5,11 @@ import {
     searchBoard,
     getBoardsOfWriter,
     getFreeBoard, getSaleBoard,
-    getFreeBoardDetail, getSaleBoardDetail,
     createFreeBoard, createSaleBoard,
-    deleteBoard,
+    getFreeBoardDetail, getSaleBoardDetail,
     updateFreeBoard, updateSaleBoard,
+    deleteBoard,
+    paymentPoint,
     getComment,
     updateComment,
     createComment,
@@ -58,6 +59,9 @@ boardRouter.put(routes.saleBoardDetail,
 
 //게시글 삭제
 boardRouter.delete(routes.boardDetail, deleteBoard);
+
+//첨부파일 포인트 결제
+//boardRouter.post(routes.saleBoardDetail, paymentPoint);
 
 //댓글 조회
 boardRouter.get(routes.boardComment, getComment);
