@@ -1,6 +1,7 @@
 import { mysqlConn } from "../db";
 import { usePoint } from "../controllers/pointController"
 import { now } from "mongoose";
+import { KinesisVideoArchivedMedia } from "aws-sdk";
 const challengeQuery = require("../queries/challengeQuery");
 
 export const getAchievementRate = async (req, res) => {
@@ -297,7 +298,6 @@ export const enterChallenge = async (req, res, next) => {
   }
 };
 
-
 export const refundChallengeDeposit = async (req, res, next) => {
   try {
     const challengeId = req.body.challengeId;
@@ -371,6 +371,108 @@ export const refundChallengeDeposit = async (req, res, next) => {
 
       await conn.query(challengeQuery.successDepositRefund, [challengeId, userId]);
       next();
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+
+export const createProofPicture = async (req, res) => {
+  try {
+    let { challengeId } = req.params;
+    const body = req.body;
+    const proofImage = req.file;
+
+    console.log("s3 proofImage 경로 :", proofImage.location);
+
+    await mysqlConn(async (conn) => {
+      //오늘 날짜
+      var today = await conn.query(challengeQuery.getToday);
+      //인증가능요일
+      var proofAvailableDay = await conn.query(challengeQuery.getProofAvailableDay, [challengeId]);
+      //하루 인증 횟수
+      var proofCntOneDay = await conn.query(challengeQuery.getProofCntOneDay, [challengeId]);
+      //일주일 인증 횟수
+      var proofCnt = await conn.query(challengeQuery.getProofCnt, [challengeId]);
+      //사용자 하루 인증 횟수
+      var userDayCnt = await conn.query(challengeQuery.getUserDayCnt, [challengeId, req.user.userId]);
+      //사용자 일주일 인증 횟수
+      var userWeekCnt = await conn.query(challengeQuery.getUserWeekCnt, [challengeId, req.user.userId]);
+
+      var today1 = today[0][0].dayofweek;
+      var proofAvailableDay1 = proofAvailableDay[0][0].proofAvailableDay;
+      var proofCntOneDay1 = proofCntOneDay[0][0].proofCountOneDay;
+      var proofCnt1 = proofCnt[0][0].proofCount;
+      var userDayCnt1 = userDayCnt[0][0].userDayCnt;
+      var userWeekCnt1 = userWeekCnt[0][0].userWeekCnt;
+
+      console.log(proofCntOneDay1, userDayCnt1, proofCntOneDay1, proofCnt1, userWeekCnt1);
+      console.log(proofAvailableDay1, today1);
+      
+      //인증가능요일인지 확인
+      var value = proofAvailableDay1.indexOf(today1);
+
+      if (value != -1) {
+        //인증횟수(하루, 일주일) 확인
+        if ((proofCntOneDay1 > userDayCnt1) && (proofCntOneDay1 * proofCnt1 > userWeekCnt1)) {
+          await conn.query(challengeQuery.createProofPicture, [
+            challengeId,
+            req.user.userId,
+            proofImage.location,
+            body.dailyReview
+          ]);
+          return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'create proofPicture',
+            proofImage: proofImage.location
+          });
+        } else {
+          return res.status(200).json({
+            code: 200,
+            success: false,
+            message: "You have already completed the number of authentications"
+          });
+        }
+      } else {
+        return res.status(200).json({
+          code: 200,
+          success: false,
+          message: "It is not a certifiable day of the week"
+        });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const getProofPicture = async (req, res) => {
+  try {
+    let { challengeId } = req.params;
+    const {
+      query: { pageNum, numOfRows },
+    } = req;
+    await mysqlConn(async (conn) => {
+      const query = challengeQuery.getProofPicture + pageNum * numOfRows + "," + numOfRows;
+      const [data] = await conn.query(query, [challengeId]);
+      return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const getProofPictureDetail = async (req, res) => {
+  try {
+    let { challengeId, pictureId } = req.params;
+    await mysqlConn(async (conn) => {
+      const [data] = await conn.query(challengeQuery.getProofPictureDetail, [challengeId, pictureId]);
+      return res.status(200).json(data);
     });
   } catch (err) {
     console.log(err);

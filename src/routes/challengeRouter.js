@@ -11,12 +11,13 @@ import {
   enterChallenge,
   updateChallenge,
   refundChallengeDeposit,
-  refundChallengeBonus
+  refundChallengeBonus,
+  createProofPicture,
+  getProofPicture,
+  getProofPictureDetail
 } from "../controllers/challengeController";
 import { usePoint,earnPoint } from "../controllers/pointController"
-import { 
-  challengeImgUpload
- } from "../uploadMiddlewares";
+import { challengeImgUpload, proofPictureUpload } from "../uploadMiddlewares";
 
 const challengeRouter = express.Router();
 
@@ -31,7 +32,6 @@ challengeRouter.get("/", getCategoryChallenge);
 
 //챌린지 검색
 challengeRouter.get("/search", searchChallenge);
-
 
 //챌린지 생성
 challengeRouter.post(
@@ -54,7 +54,6 @@ challengeRouter.post("/enter",
 //달성률 조회
 challengeRouter.get("/:challengeId/achievement-rate", getAchievementRate);
 
-
 //챌린지 보증금 환급_출석
 challengeRouter.post("/refund-deposit", 
   refundChallengeDeposit,
@@ -66,7 +65,6 @@ challengeRouter.post("/refund-deposit",
 //   refundChallengeBonus,
 //   earnPoint
 // );
-
 
 //챌린지 수정
 challengeRouter.put("/", 
@@ -82,6 +80,15 @@ challengeRouter.get("/:challengeId", getChallenge);
 
 //챌린지 삭제
 challengeRouter.delete("/:challengeId", deleteChallenge);
+
+//사진 인증
+challengeRouter.post("/:challengeId/proof-picture", proofPictureUpload.single('proofImage'), createProofPicture);
+
+//피드 조회
+challengeRouter.get("/:challengeId/proof-picture", getProofPicture);
+
+//피드 상세 조회
+challengeRouter.get("/:challengeId/proof-picture/:pictureId", getProofPictureDetail);
 
 
 export default challengeRouter;
