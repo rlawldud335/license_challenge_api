@@ -340,7 +340,7 @@ export const enterChallenge = async (req, res, next) => {
     //실패시 보증금 환불
     req.body = {
       "point": deposit,
-      "targetType": "챌린지 보증금 환불",
+      "targetType": "챌린지 보증금 결제 실패",
       "targetId": challengeId
     };
     next();

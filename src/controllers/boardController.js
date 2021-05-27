@@ -303,7 +303,7 @@ export const purchaseFile = async (req, res, next) => {
     //실패시 보증금 환불
     req.body = {
       "point": point,
-      "targetType": "첨부파일 환불",
+      "targetType": "첨부파일 결제 실패",
       "targetId": fileId
     };
     next();
