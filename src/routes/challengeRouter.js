@@ -14,10 +14,12 @@ import {
   refundChallengeBonus,
   createProofPicture,
   getProofPicture,
-  getProofPictureDetail
+  getProofPictureDetail,
+  refundDeposit_Auto
 } from "../controllers/challengeController";
 import { usePoint,earnPoint } from "../controllers/pointController"
 import { challengeImgUpload, proofPictureUpload } from "../uploadMiddlewares";
+const schedule = require('node-schedule');
 
 const challengeRouter = express.Router();
 
@@ -55,10 +57,9 @@ challengeRouter.post("/enter",
 challengeRouter.get("/:challengeId/achievement-rate", getAchievementRate);
 
 //챌린지 보증금 환급_출석
-challengeRouter.post("/refund-deposit", 
-  refundChallengeDeposit,
-  earnPoint
-);
+schedule.scheduleJob('* * 03 * * *', (req, res) => {
+  refundDeposit_Auto()
+});
 
 //챌린지 보너스 환급_자격증합격시
 // challengeRouter.post("/refund-bonus", 

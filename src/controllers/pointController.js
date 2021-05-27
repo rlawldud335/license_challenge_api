@@ -178,6 +178,20 @@ export const earnPoint = async (req, res) => {
   }
 };
 
+export const refundDepositPoint = async function(userId,point,targetId){
+  try {
+    let targetType="챌린지 보증금 환급";
+    await mysqlConn(async (conn) => {
+      const [data] = await conn.query(pointQuery.earnPoint, [userId, targetType, targetId, point, userId, point]);
+      const [data2] = await conn.query(pointQuery.plusBalance, [point, userId]);
+      const [balance2] = await conn.query(pointQuery.getPoint, [userId]);
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
 export const getPointHistory = async (req, res) => {
   console.log("포인트내역조회")
   const userId = req.user.userId;

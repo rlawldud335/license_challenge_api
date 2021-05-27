@@ -1,5 +1,5 @@
 import { mysqlConn } from "../db";
-import { usePoint } from "../controllers/pointController"
+import { refundDepositPoint } from "../controllers/pointController"
 import { now } from "mongoose";
 import { KinesisVideoArchivedMedia } from "aws-sdk";
 const challengeQuery = require("../queries/challengeQuery");
@@ -241,7 +241,6 @@ export const updateChallenge = async (req, res) => {
   }
 };
 
-
 export const deleteChallenge = async (req, res) => {
   try {
     let { challengeId } = req.params;
@@ -263,7 +262,6 @@ export const deleteChallenge = async (req, res) => {
     return res.status(500).json(err);
   }
 };
-
 
 export const enterChallenge = async (req, res, next) => {
   //let { challengeId } = req.params;
@@ -378,7 +376,6 @@ export const refundChallengeDeposit = async (req, res, next) => {
   }
 };
 
-
 export const createProofPicture = async (req, res) => {
   try {
     let { challengeId } = req.params;
@@ -410,7 +407,7 @@ export const createProofPicture = async (req, res) => {
 
       console.log(proofCntOneDay1, userDayCnt1, proofCntOneDay1, proofCnt1, userWeekCnt1);
       console.log(proofAvailableDay1, today1);
-      
+
       //인증가능요일인지 확인
       var value = proofAvailableDay1.indexOf(today1);
 
@@ -477,5 +474,50 @@ export const getProofPictureDetail = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+////////////자동환급//////////////
+export const refundDeposit_Auto = async function() {
+  try {
+    await mysqlConn(async (conn) => {
+      const [end] = await conn.query(challengeQuery.getEndedCLG);
+      for (var i = 0; i < end.length; i++) {
+        const challengeId = end[i].challengeId;
+        const deposit = end[i].deposit;
+
+        const [users] = await conn.query(challengeQuery.getEndedUsers,[challengeId]);
+        for (var i = 0; i < users.length; i++) {
+          const userId = users[i].userId;
+          const achievement_rate = users[i].achievement_rate;
+          let refundAmount = 0;
+
+          if (80 <= achievement_rate) {
+            refundAmount = deposit;
+          }
+          else if (50 <= achievement_rate && achievement_rate < 80) {
+            refundAmount = deposit * (achievement_rate / 100);
+          }
+
+          refundDepositPoint(userId, refundAmount, challengeId);
+          await conn.query(challengeQuery.successDepositRefund, [challengeId, userId]);
+          await conn.query(challengeQuery.successDepositRefund2, [challengeId]);
+        }
+
+      }
+    });
+    console.log("보증금 자동환급 성공!")
+  } catch (err) {
+    console.log(err);
   }
 };

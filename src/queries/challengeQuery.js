@@ -27,3 +27,13 @@ export const getProofCntOneDay= "SELECT proofCountOneDay FROM challenge WHERE ch
 export const getProofCnt = "SELECT proofCount from challenge where challengeId = ?"
 export const getUserDayCnt = "SELECT COUNT(*) AS userDayCnt FROM proof_picture WHERE challengeId = ? AND userId = ? AND date(proofDt) = date(curdate())"
 export const getUserWeekCnt = "SELECT COUNT(*) AS userWeekCnt FROM proof_picture WHERE date_format(proofDt,'%Y-%m-%d') BETWEEN (SELECT ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 0 )) AND (SELECT ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 6 )) AND challengeId = ? AND userId = ?"
+
+
+
+
+
+/////////////자동환급//////////////
+//끝난챌린지 id, 보증금
+export const getEndedCLG = "SELECT challengeId, deposit, refund FROM challenge WHERE challenge.chgEndDt < date(now()) AND refund=0"
+export const getEndedUsers = "SELECT distinct userId, refund_deposit, IFNULL(ROUND((join_challenge.successCnt/(join_challenge.successCnt+join_challenge.failCnt))*100),0) AS achievement_rate FROM join_challenge WHERE challengeId = ?"
+export const successDepositRefund2 = "UPDATE challenge SET refund = 1 WHERE challengeId = ?"
