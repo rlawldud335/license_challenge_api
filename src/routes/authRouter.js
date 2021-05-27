@@ -22,8 +22,8 @@ authRouter.post("/signup", async (req, res) => {
         return res.status(401).send({ error: "This email exists" });
       }
       const result = await conn.query(
-        "INSERT INTO user(email,password,nickname,phoneNumber) VALUES(?,?,?,?)",
-        [email, password, nickname, phoneNumber]
+        "INSERT INTO user(email,password,nickname,phoneNumber,profileImage) VALUES(?,?,?,?,?)",
+        [email, password, nickname, phoneNumber, "https://licensechallenge.s3.ap-northeast-2.amazonaws.com/front/pink-sky.jpg"]
       );
       const newUserId = result[0].insertId;
       console.log(newUserId);

@@ -1,5 +1,5 @@
 import { mysqlConn } from "../db";
-import { usePoint } from "../controllers/pointController"
+import { refundDepositPoint } from "../controllers/pointController"
 import { now } from "mongoose";
 const challengeQuery = require("../queries/challengeQuery");
 
@@ -116,10 +116,21 @@ export const getChallenge = async (req, res) => {
   }
 };
 
-export const createChallenge = async (req, res) => {
+export const createChallenge = async (req, res, next) => {
   try {
     const body = req.body;
     const userId = req.user.userId;
+    if (req.user.point < body.deposit) {
+      return res.status(200).json({
+        code: 200,
+        success: false,
+        message: 'Insufficient balance',
+        userId: userId,
+        balance: req.user.point,
+        "Required Point": body.deposit - req.user.point
+      });
+    }
+
     const chgStartDt = new Date(body.chgStartDt);
     const chgEndDt = new Date(body.chgEndDt);
     const challengeTitleImage = req.files["challengeTitleImage"][0];
@@ -147,15 +158,21 @@ export const createChallenge = async (req, res) => {
           badProofImage.location,
           body.deposit,
           body.limitPeople,
+          body.deposit
         ]);
-        const [data2] = await conn.query(challengeQuery.enterChallenge_leader, [data.insertId, userId]);
+        //const [data2] = await conn.query(challengeQuery.enterChallenge_leader, [data.insertId, userId]);
 
-        //return res.json(data[0]);
-        return res.status(200).json({
-          code: 200,
-          success: true,
-          message: "create other challenge",
-        });
+        // return res.status(200).json({
+        //   code: 200,
+        //   success: true,
+        //   message: "create other challenge",
+        // });
+
+        req.body = {
+          create: true,
+          challengeId: data.insertId,
+          deposit: body.deposit
+        }
       });
     } else {
       await mysqlConn(async (conn) => {
@@ -178,18 +195,28 @@ export const createChallenge = async (req, res) => {
           badProofImage.location,
           body.deposit,
           body.limitPeople,
+          body.deposit
         ]);
 
-        const [data2] = await conn.query(challengeQuery.enterChallenge_leader, [data.insertId, userId]);
+        //const [data2] = await conn.query(challengeQuery.enterChallenge_leader, [data.insertId, userId]);
 
-        //return res.json(data[0]);
-        return res.status(200).json({
-          code: 200,
-          success: true,
-          message: "create license challenge",
-        });
+        // return res.status(200).json({
+        //   code: 200,
+        //   success: true,
+        //   message: "create license challenge",
+        // });
+
+        req.body = {
+          create: true,
+          challengeId: data.insertId,
+          deposit: body.deposit
+        }
       });
     }
+
+
+    next();
+
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
@@ -240,7 +267,6 @@ export const updateChallenge = async (req, res) => {
   }
 };
 
-
 export const deleteChallenge = async (req, res) => {
   try {
     let { challengeId } = req.params;
@@ -262,7 +288,6 @@ export const deleteChallenge = async (req, res) => {
     return res.status(500).json(err);
   }
 };
-
 
 export const enterChallenge = async (req, res, next) => {
   //let { challengeId } = req.params;
@@ -297,86 +322,86 @@ export const enterChallenge = async (req, res, next) => {
   }
 };
 
-export const refundChallengeDeposit = async (req, res, next) => {
-  try {
-    const challengeId = req.body.challengeId;
-    const userId = req.user.userId;
-    const deposit = req.body.deposit;
+// 출석 보증금 수동 환급
+// export const refundChallengeDeposit = async (req, res, next) => {
+//   try {
+//     const challengeId = req.body.challengeId;
+//     const userId = req.user.userId;
+//     const deposit = req.body.deposit;
 
-    await mysqlConn(async (conn) => {
-      const [data] = await conn.query(challengeQuery.getChallengeEndDt, [challengeId]);
-      const chgEndDt = new Date(data[0].chgEndDt);
+//     await mysqlConn(async (conn) => {
+//       const [data] = await conn.query(challengeQuery.getChallengeEndDt, [challengeId]);
+//       const chgEndDt = new Date(data[0].chgEndDt);
 
-      if (chgEndDt.getTime() > now().getTime()) {
-        return res.status(200).json({
-          code: 200,
-          success: false,
-          message: "Challenge not yet complete",
-          challengeId: challengeId,
-          userId: userId
-        });
-      }
+//       if (chgEndDt.getTime() > now().getTime()) {
+//         return res.status(200).json({
+//           code: 200,
+//           success: false,
+//           message: "Challenge not yet complete",
+//           challengeId: challengeId,
+//           userId: userId
+//         });
+//       }
 
-      const [check] = await conn.query(challengeQuery.checkDepositRefund, [userId, challengeId, userId, challengeId]);
-      const pass = check[0].pass;
-      const alreadyRefund = parseInt(check[0].refund_deposit);
-      let refundRate = parseInt(check[0].refund_rate);
+//       const [check] = await conn.query(challengeQuery.checkDepositRefund, [userId, challengeId, userId, challengeId]);
+//       const pass = check[0].pass;
+//       const alreadyRefund = parseInt(check[0].refund_deposit);
+//       let refundRate = parseInt(check[0].refund_rate);
 
-      if (refundRate == -1) {
-        return res.status(200).json({
-          code: 200,
-          success: false,
-          message: "Is not your challenge",
-          challengeId: challengeId,
-          userId: userId
-        });
-      }
-      else if (alreadyRefund) {
-        return res.status(200).json({
-          code: 200,
-          success: false,
-          message: "You have already received a refund",
-          challengeId: challengeId,
-          userId: userId
-        });
-      }
-      else if (refundRate == 0) {
-        await conn.query(challengeQuery.successDepositRefund, [challengeId, userId]);
-        return res.status(200).json({
-          code: 200,
-          success: true,
-          message: "The refund is 0",
-          challengeId: challengeId,
-          userId: userId,
-          "Earn amount": 0
-        });
-      }
-      else {
-        refundRate = refundRate / 100;
-      }
+//       if (refundRate == -1) {
+//         return res.status(200).json({
+//           code: 200,
+//           success: false,
+//           message: "Is not your challenge",
+//           challengeId: challengeId,
+//           userId: userId
+//         });
+//       }
+//       else if (alreadyRefund) {
+//         return res.status(200).json({
+//           code: 200,
+//           success: false,
+//           message: "You have already received a refund",
+//           challengeId: challengeId,
+//           userId: userId
+//         });
+//       }
+//       else if (refundRate == 0) {
+//         await conn.query(challengeQuery.successDepositRefund, [challengeId, userId]);
+//         return res.status(200).json({
+//           code: 200,
+//           success: true,
+//           message: "The refund is 0",
+//           challengeId: challengeId,
+//           userId: userId,
+//           "Earn amount": 0
+//         });
+//       }
+//       else {
+//         refundRate = refundRate / 100;
+//       }
 
-      //합격인증자는 전액환불
-      if (pass == 1) {
-        refundRate = 1;
-      }
-      const refundAmount = deposit * refundRate;
+//       //합격인증자는 전액환불
+//       if (pass == 1) {
+//         refundRate = 1;
+//       }
+//       const refundAmount = deposit * refundRate;
 
-      //보증금 환급
-      req.body = {
-        "point": refundAmount,
-        "targetType": "챌린지 보증금 환급",
-        "targetId": challengeId
-      };
+//       //보증금 환급
+//       req.body = {
+//         "point": refundAmount,
+//         "targetType": "챌린지 보증금 환급",
+//         "targetId": challengeId
+//       };
 
-      await conn.query(challengeQuery.successDepositRefund, [challengeId, userId]);
-      next();
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
-  }
-};
-
+//       await conn.query(challengeQuery.successDepositRefund, [challengeId, userId]);
+//       next();
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json(err);
+//   }
+// };
 
 export const createProofPicture = async (req, res) => {
   try {
@@ -409,7 +434,7 @@ export const createProofPicture = async (req, res) => {
 
       console.log(proofCntOneDay1, userDayCnt1, proofCntOneDay1, proofCnt1, userWeekCnt1);
       console.log(proofAvailableDay1, today1);
-      
+
       //인증가능요일인지 확인
       var value = proofAvailableDay1.indexOf(today1);
 
@@ -476,5 +501,132 @@ export const getProofPictureDetail = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
+  }
+};
+
+
+
+
+
+
+
+//////////보너스 환급///////////////
+export const refundChallengeBonus = async (req, res, next) => {
+  try {
+    let { challengeId } = req.params;
+    const userId = req.user.userId;
+
+    await mysqlConn(async (conn) => {
+      const [data] = await conn.query(challengeQuery.getDepositBalance, [challengeId]);
+      const balance = data[0].balance_deposit;
+
+      if (!data[0].refund) {
+        return res.status(200).json({
+          code: 200,
+          success: false,
+          message: "Challenge not yet complete",
+          challengeId: challengeId,
+          userId: userId
+        });
+      }
+      if (balance == 0) {
+        await conn.query(challengeQuery.successBonusRefund, [challengeId, userId]);
+        return res.status(200).json({
+          code: 200,
+          success: true,
+          message: "The refund is 0",
+          challengeId: challengeId,
+          userId: userId,
+          "Earn amount": 0
+        });
+      }
+
+      const [check] = await conn.query(challengeQuery.checkBonus, [userId, challengeId, userId, challengeId]);
+      const [count] = await conn.query(challengeQuery.countBonusUsers, [challengeId]);
+      let refundAmount = 0;
+      const userCount = count[0].count;
+
+      if (check[0].refund_bonus) {
+        return res.status(200).json({
+          code: 200,
+          success: false,
+          message: "You have already received a refund",
+          challengeId: challengeId,
+          userId: userId
+        });
+      }
+
+      if (check[0].bonus_check) {
+        refundAmount = Math.floor(balance / userCount);
+        //보증금 환급
+        req.body = {
+          "point": refundAmount,
+          "targetType": "챌린지 보너스 환급",
+          "targetId": challengeId
+        };
+
+        await conn.query(challengeQuery.successBonusRefund, [challengeId, userId]);
+        await conn.query(challengeQuery.successDepositRefund2, [refundAmount,challengeId]);
+        next();
+      }
+      else {
+        await conn.query(challengeQuery.successBonusRefund, [challengeId, userId]);
+        return res.status(200).json({
+          code: 200,
+          success: true,
+          message: "The refund is 0",
+          challengeId: challengeId,
+          userId: userId,
+          "Earn amount": 0
+        });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+
+
+////////////자동환급//////////////
+export const refundDeposit_Auto = async function () {
+  try {
+    let allAmount = 0;
+    await mysqlConn(async (conn) => {
+      const [end] = await conn.query(challengeQuery.getEndedCLG);
+      for (var i = 0; i < end.length; i++) {
+        const challengeId = end[i].challengeId;
+        const deposit = end[i].deposit;
+
+        const [users] = await conn.query(challengeQuery.getEndedUsers, [challengeId]);
+        for (var i = 0; i < users.length; i++) {
+          const userId = users[i].userId;
+          const achievement_rate = users[i].achievement_rate;
+          let refundAmount = 0;
+
+          if (80 <= achievement_rate) {
+            refundAmount = deposit;
+            allAmount += refundAmount;
+          }
+          else if (50 <= achievement_rate && achievement_rate < 80) {
+            refundAmount = deposit * (achievement_rate / 100);
+            allAmount += refundAmount;
+          }
+          else if(achievement_rate<50){
+            refundAmount = 0;
+          }
+
+          
+          refundDepositPoint(userId, refundAmount, challengeId);
+          await conn.query(challengeQuery.successDepositRefund, [challengeId, userId]);
+        }
+        await conn.query(challengeQuery.successDepositRefund2, [allAmount, challengeId]);
+        console.log("보증금 자동환급 성공! 챌린지ID:",challengeId, "환급총액:", allAmount);
+      }
+    });
+    
+  } catch (err) {
+    console.log(err);
   }
 };
