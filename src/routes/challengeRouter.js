@@ -56,20 +56,6 @@ challengeRouter.post("/enter",
   earnPoint
 );
 
-//달성률 조회
-challengeRouter.get("/:challengeId/achievement-rate", getAchievementRate);
-
-//챌린지 보증금 환급_출석
-schedule.scheduleJob('* * 03 * * *', () => {
-  refundDeposit_Auto()
-});
-
-//챌린지 보너스 환급_자격증합격시
-// challengeRouter.post("/refund-bonus", 
-//   refundChallengeBonus,
-//   earnPoint
-// );
-
 //챌린지 수정
 challengeRouter.put("/", 
   challengeImgUpload.fields([
@@ -78,6 +64,10 @@ challengeRouter.put("/",
     { name: "badProofImage"},
   ]),
 updateChallenge);
+
+
+//달성률 조회
+challengeRouter.get("/:challengeId/achievement-rate", getAchievementRate);
 
 //챌린지 상세조회
 challengeRouter.get("/:challengeId", getChallenge);
@@ -93,6 +83,17 @@ challengeRouter.get("/:challengeId/proof-picture", getProofPicture);
 
 //피드 상세 조회
 challengeRouter.get("/:challengeId/proof-picture/:pictureId", getProofPictureDetail);
+
+//챌린지 보너스 환급
+challengeRouter.post("/:challengeId/refund-bonus", 
+  refundChallengeBonus,
+  earnPoint
+);
+
+//챌린지 보증금 자동환급_출석
+schedule.scheduleJob('* * 03 * * *', () => {
+  refundDeposit_Auto()
+});
 
 
 export default challengeRouter;

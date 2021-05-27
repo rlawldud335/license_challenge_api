@@ -2,7 +2,7 @@ export const getAllChallenge = "SELECT challengeId a, challengeId, challengeTitl
 export const getLicenseChallenges = "SELECT challenge.challengeId, challenge.challengeTitle, license.licenseName, challenge.proofCount, challenge.proofCountOneDay, challenge.challengeTitleImage, challenge.deposit FROM challenge, license WHERE challenge.licenseId=license.licenseId AND challengeCategory = '자격증' ORDER BY challengeCreateDt DESC LIMIT "
 export const getOtherChallenges = "SELECT challenge.challengeId, challenge.challengeTitle, NULL as licenseName,  challenge.proofCount, challenge.proofCountOneDay, challenge.challengeTitleImage, challenge.deposit, challengeCreateDt FROM challenge WHERE challenge.licenseId IS NULL AND challengeCategory = ? ORDER BY challengeCreateDt DESC LIMIT "
 export const getOneChallenge = "SELECT challenge.*, IF(challenge.licenseId IS NULL, NULL, (SELECT license.licenseName FROM challenge,license WHERE challenge.licenseId=license.licenseId AND challenge.challengeId=?)) AS licenseName, user.nickname AS 'leaderName', user.profileImage AS 'leaderProfileImage' FROM challenge, user WHERE challengeId=? AND challenge.leaderId=user.userId"
-export const createLicenseChallenge = "INSERT INTO license_challenge.challenge (challengeTitle, challengeCategory, licenseId, leaderId, proofMethod, proofAvailableDay, proofCount, proofCountOneDay, chgStartDt, chgEndDt, challengeTitleImage, challengeIntroduction, goodProofImage, badProofImage, deposit, limitPeople, joinPeople) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0);"
+export const createLicenseChallenge = "INSERT INTO license_challenge.challenge (challengeTitle, challengeCategory, licenseId, leaderId, proofMethod, proofAvailableDay, proofCount, proofCountOneDay, chgStartDt, chgEndDt, challengeTitleImage, challengeIntroduction, goodProofImage, badProofImage, deposit, limitPeople, balance_deposit) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
 export const createOtherChallenge = "INSERT INTO license_challenge.challenge (challengeTitle, challengeCategory, leaderId, proofMethod, proofAvailableDay, proofCount, proofCountOneDay, chgStartDt, chgEndDt, challengeTitleImage, challengeIntroduction, goodProofImage, badProofImage, deposit, limitPeople, joinPeople) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1);"
 export const updateChallenge = "UPDATE challenge SET challengeTitle= ?, proofMethod = ?, proofAvailableDay = ?, proofCount = ?, proofCountOneDay = ?, challengeTitleImage = ?, challengeIntroduction = ?, goodProofImage= ?, badProofImage = ?, limitPeople= ? WHERE challengeId = ?"
 export const deleteChallenge = "DELETE FROM license_challenge.challenge WHERE challengeId = ?;"
@@ -12,11 +12,8 @@ export const searchChallenge = "SELECT challenge.challengeId, challenge.challeng
 export const getAchievementRate = "SELECT challenge.challengeId, challenge.challengeTitle, join_challenge.successCnt, join_challenge.failCnt, IFNULL(ROUND((join_challenge.successCnt/(join_challenge.successCnt+join_challenge.failCnt))*100),0) AS achievement_rate FROM challenge, join_challenge WHERE join_challenge.challengeId = challenge.challengeId AND join_challenge.userId=? AND challenge.challengeId=?"
 export const enterChallenge_leader = "INSERT INTO join_challenge(challengeId, userId, successCnt, failCnt, pass) VALUES (?,?,0,0,0)"
 export const enterChallenge_follower = "INSERT INTO join_challenge(challengeId, userId, successCnt, failCnt, pass) VALUES (?,?,0,0,0);" 
-export const plusJoinPeople = "UPDATE challenge SET joinPeople = joinPeople+1 WHERE challengeId = ?;"
+export const plusJoinPeople = "UPDATE challenge SET joinPeople = joinPeople+1, balance_deposit = balance_deposit+deposit WHERE challengeId = ?;"
 export const getChallengeEndDt = "SELECT chgEndDt FROM challenge WHERE challengeId=?"
-export const checkDepositRefund = "SELECT pass, refund_deposit, achievement_rate, ( CASE WHEN 80 <= achievement_rate THEN 100 WHEN  50 <= achievement_rate AND achievement_rate < 80 THEN achievement_rate WHEN achievement_rate < 50 THEN 0 ELSE -1 END ) AS refund_rate FROM join_challenge, (SELECT IFNULL(ROUND((join_challenge.successCnt/(join_challenge.successCnt+join_challenge.failCnt))*100),0) AS achievement_rate FROM join_challenge WHERE userId = ? AND challengeId = ?) B WHERE userId = ? AND challengeId = ?"
-export const successDepositRefund = "UPDATE join_challenge SET refund_deposit = 1 WHERE challengeId = ? AND userId = ?"
-
 export const createProofPicture = "INSERT INTO proof_picture(challengeId, userId, proofImage, dailyReview, reportCnt, proof) VALUES(?, ?, ?, ?, 0, 0)"
 export const getProofPicture = "SELECT pictureId, proofImage FROM proof_picture WHERE challengeId = ? ORDER BY proofDt DESC LIMIT "
 export const getProofPictureDetail = "SELECT pp.pictureId, pp.proofImage, u.nickname, pp.dailyReview, pp.proofDt, pp.reportCnt FROM proof_picture pp, user u WHERE pp.userId = u.userId AND pp.challengeId = ? AND pp.pictureId = ?"
@@ -32,8 +29,14 @@ export const getUserWeekCnt = "SELECT COUNT(*) AS userWeekCnt FROM proof_picture
 
 
 
-/////////////자동환급//////////////
-//끝난챌린지 id, 보증금
+/////////////환급//////////////
+//export const checkDepositRefund = "SELECT pass, refund_deposit, achievement_rate, ( CASE WHEN 80 <= achievement_rate THEN 100 WHEN  50 <= achievement_rate AND achievement_rate < 80 THEN achievement_rate WHEN achievement_rate < 50 THEN 0 ELSE -1 END ) AS refund_rate FROM join_challenge, (SELECT IFNULL(ROUND((join_challenge.successCnt/(join_challenge.successCnt+join_challenge.failCnt))*100),0) AS achievement_rate FROM join_challenge WHERE userId = ? AND challengeId = ?) B WHERE userId = ? AND challengeId = ?"
+
 export const getEndedCLG = "SELECT challengeId, deposit, refund FROM challenge WHERE challenge.chgEndDt < date(now()) AND refund=0"
 export const getEndedUsers = "SELECT distinct userId, refund_deposit, IFNULL(ROUND((join_challenge.successCnt/(join_challenge.successCnt+join_challenge.failCnt))*100),0) AS achievement_rate FROM join_challenge WHERE challengeId = ?"
-export const successDepositRefund2 = "UPDATE challenge SET refund = 1 WHERE challengeId = ?"
+export const successDepositRefund = "UPDATE join_challenge SET refund_deposit = 1 WHERE challengeId = ? AND userId = ?"
+export const successDepositRefund2 = "UPDATE challenge SET refund = 1, balance_deposit = balance_deposit-? WHERE challengeId = ?"
+export const successBonusRefund = "UPDATE join_challenge SET refund_bonus = 1 WHERE challengeId = ? AND userId = ?"
+export const checkBonus = "SELECT refund_bonus, IF((pass = 1 AND achievement_rate>95) OR achievement_rate =100 ,1,0) AS bonus_check FROM join_challenge, (SELECT IFNULL(ROUND((join_challenge.successCnt/(join_challenge.successCnt+join_challenge.failCnt))*100),0) AS achievement_rate FROM join_challenge WHERE userId = ? AND challengeId = ?) B WHERE userId = ? AND challengeId = ?"
+export const countBonusUsers = "SELECT COUNT(*) AS count FROM join_challenge WHERE challengeId=? AND ((pass = 1 AND (successCnt/(successCnt+failCnt))*100 > 95) OR (successCnt/(successCnt+failCnt))*100=100)"
+export const getDepositBalance = "SELECT refund, balance_deposit FROM challenge WHERE challengeId=?"
