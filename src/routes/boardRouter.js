@@ -10,11 +10,13 @@ import {
     updateFreeBoard, updateSaleBoard,
     deleteBoard,
     paymentPoint,
+    purchaseFile,
     getComment,
     updateComment,
     createComment,
     deleteComment
 } from "../controllers/boardController";
+import { usePoint,earnPoint } from "../controllers/pointController"
 
 const boardRouter = express.Router();
 
@@ -61,7 +63,11 @@ boardRouter.put(routes.saleBoardDetail,
 boardRouter.delete(routes.boardDetail, deleteBoard);
 
 //첨부파일 포인트 결제
-//boardRouter.post(routes.saleBoardDetail, paymentPoint);
+boardRouter.post(routes.saleBoardDetail, 
+    usePoint,
+    purchaseFile,
+    earnPoint
+);
 
 //댓글 조회
 boardRouter.get(routes.boardComment, getComment);

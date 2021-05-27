@@ -267,7 +267,7 @@ export const deleteBoard = async (req, res) => {
 
 // export const paymentPoint = async (req, res, next) => {
 //   try {
-//     let { boardId } = req.params;
+//     let { boardId } = req.params;    
 //     await mysqlConn(async (conn) => {
 
 //     });
@@ -276,6 +276,42 @@ export const deleteBoard = async (req, res) => {
 //     return res.status(500).json(err);
 //   }
 // }
+
+
+export const purchaseFile = async (req, res, next) => {
+  const fileId = req.body.fileId;
+  const userId = req.user.userId;
+  const point = req.body.point;
+
+  try {
+    await mysqlConn(async (conn) => {
+
+      //쿼리쓰기
+
+      return res.status(200).json({
+        code: 200,
+        success: true,
+        message: "purchase File",
+        fileId: fileId,
+        point: point,
+        userId: userId
+      });
+
+    });
+  } catch (err) {
+    console.log(err);
+    //실패시 보증금 환불
+    req.body = {
+      "point": point,
+      "targetType": "첨부파일 환불",
+      "targetId": fileId
+    };
+    next();
+  }
+};
+
+
+
 ////////////////////////////////COMMENT/////////////////////////////////////////
 
 export const getComment = async (req, res) => {
