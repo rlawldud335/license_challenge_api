@@ -43,7 +43,10 @@ challengeRouter.post(
     { name: "goodProofImage"},
     { name: "badProofImage"},
   ]),
-  createChallenge
+  createChallenge,
+  usePoint,
+  enterChallenge,
+  earnPoint
 );
 
 //챌린지 참가
@@ -57,7 +60,7 @@ challengeRouter.post("/enter",
 challengeRouter.get("/:challengeId/achievement-rate", getAchievementRate);
 
 //챌린지 보증금 환급_출석
-schedule.scheduleJob('* * 03 * * *', (req, res) => {
+schedule.scheduleJob('* * 03 * * *', () => {
   refundDeposit_Auto()
 });
 

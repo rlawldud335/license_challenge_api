@@ -117,10 +117,21 @@ export const getChallenge = async (req, res) => {
   }
 };
 
-export const createChallenge = async (req, res) => {
+export const createChallenge = async (req, res, next) => {
   try {
     const body = req.body;
     const userId = req.user.userId;
+    if(req.user.point < body.deposit){
+      return res.status(200).json({
+        code: 200,
+        success: false,
+        message: 'Insufficient balance',
+        userId: userId,
+        balance: req.user.point,
+        "Required Point": body.deposit - req.user.point
+      });
+    }
+    
     const chgStartDt = new Date(body.chgStartDt);
     const chgEndDt = new Date(body.chgEndDt);
     const challengeTitleImage = req.files["challengeTitleImage"][0];
@@ -149,14 +160,19 @@ export const createChallenge = async (req, res) => {
           body.deposit,
           body.limitPeople,
         ]);
-        const [data2] = await conn.query(challengeQuery.enterChallenge_leader, [data.insertId, userId]);
+        //const [data2] = await conn.query(challengeQuery.enterChallenge_leader, [data.insertId, userId]);
 
-        //return res.json(data[0]);
-        return res.status(200).json({
-          code: 200,
-          success: true,
-          message: "create other challenge",
-        });
+        // return res.status(200).json({
+        //   code: 200,
+        //   success: true,
+        //   message: "create other challenge",
+        // });
+
+        req.body = {
+          create : true,
+          challengeId : data.insertId,
+          deposit : body.deposit
+        }
       });
     } else {
       await mysqlConn(async (conn) => {
@@ -181,16 +197,25 @@ export const createChallenge = async (req, res) => {
           body.limitPeople,
         ]);
 
-        const [data2] = await conn.query(challengeQuery.enterChallenge_leader, [data.insertId, userId]);
+        //const [data2] = await conn.query(challengeQuery.enterChallenge_leader, [data.insertId, userId]);
 
-        //return res.json(data[0]);
-        return res.status(200).json({
-          code: 200,
-          success: true,
-          message: "create license challenge",
-        });
+        // return res.status(200).json({
+        //   code: 200,
+        //   success: true,
+        //   message: "create license challenge",
+        // });
+
+        req.body = {
+          create : true,
+          challengeId : data.insertId,
+          deposit : body.deposit
+        }
       });
     }
+    
+    
+    next();
+
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);

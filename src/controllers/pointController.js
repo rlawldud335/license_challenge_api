@@ -95,12 +95,17 @@ export const usePoint = async (req, res, next) => {
 
   console.log(req.body)
 
-  if(req.body.hasOwnProperty('challengeId')==true){
+  if(req.body.hasOwnProperty('create')){
+    var targetType = "챌린지 생성";
+    var targetId = req.body.challengeId;
+    var point = req.body.deposit;
+  }
+  else if(req.body.hasOwnProperty('challengeId')){
     var targetType = "챌린지 보증금";
     var targetId = req.body.challengeId;
     var point = req.body.deposit;
   } 
-  else if(req.body.hasOwnProperty('fileId')==true){
+  else if(req.body.hasOwnProperty('fileId')){
     var targetType = "첨부파일";
     var targetId = req.body.fileId;
     var point = req.body.point;
