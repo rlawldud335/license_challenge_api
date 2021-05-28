@@ -674,6 +674,7 @@ export const proofCountAuto = async function () {
           await conn.query(challengeQuery.updateSuccessCnt, [challengeId, userId]);
           console.log("challengeId:", challengeId, "userId:", userId, "success");
         } else {
+          await conn.query(challengeQuery.deleteProofImage, [challengeId, userId]);
           await conn.query(challengeQuery.updateFailCnt, [challengeId, userId]);
           console.log("challengeId:", challengeId, "userId:", userId, "fail");
         }

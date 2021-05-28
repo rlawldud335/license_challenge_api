@@ -19,7 +19,7 @@ import {
   getAchievementRateInfo,
   proofCountAuto
 } from "../controllers/challengeController";
-import { usePoint,earnPoint } from "../controllers/pointController"
+import { usePoint, earnPoint } from "../controllers/pointController"
 import { challengeImgUpload, proofPictureUpload } from "../uploadMiddlewares";
 const schedule = require('node-schedule');
 
@@ -41,9 +41,9 @@ challengeRouter.get("/search", searchChallenge);
 challengeRouter.post(
   "/",
   challengeImgUpload.fields([
-    { name: "challengeTitleImage"},
-    { name: "goodProofImage"},
-    { name: "badProofImage"},
+    { name: "challengeTitleImage" },
+    { name: "goodProofImage" },
+    { name: "badProofImage" },
   ]),
   createChallenge,
   usePoint,
@@ -52,20 +52,20 @@ challengeRouter.post(
 );
 
 //챌린지 참가
-challengeRouter.post("/enter", 
+challengeRouter.post("/enter",
   usePoint,
   enterChallenge,
   earnPoint
 );
 
 //챌린지 수정
-challengeRouter.put("/", 
+challengeRouter.put("/",
   challengeImgUpload.fields([
-    { name: "challengeTitleImage"},
-    { name: "goodProofImage"},
-    { name: "badProofImage"},
+    { name: "challengeTitleImage" },
+    { name: "goodProofImage" },
+    { name: "badProofImage" },
   ]),
-updateChallenge);
+  updateChallenge);
 
 
 //달성률 조회
@@ -90,7 +90,7 @@ challengeRouter.get("/:challengeId/proof-picture", getProofPicture);
 challengeRouter.get("/:challengeId/proof-picture/:pictureId", getProofPictureDetail);
 
 //챌린지 보너스 환급
-challengeRouter.post("/:challengeId/refund-bonus", 
+challengeRouter.post("/:challengeId/refund-bonus",
   refundChallengeBonus,
   earnPoint
 );
