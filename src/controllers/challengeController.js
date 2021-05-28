@@ -11,9 +11,9 @@ export const getAchievementRate = async (req, res) => {
     await mysqlConn(async (conn) => {
       const query = challengeQuery.getAchievementRate;
       const [data] = await conn.query(query, [userId, challengeId]);
-      if(data[0].pass){
+      if (data[0].pass) {
         data[0].pass = "인증완료"
-      }else if(!data[0].pass) {
+      } else if (!data[0].pass) {
         data[0].pass = "인증미완료"
       }
       return res.status(200).json(data[0]);
@@ -35,7 +35,7 @@ export const getAchievementRateInfo = async (req, res) => {
       const [countDailyProofSuccess] = await conn.query(challengeQuery.getDailyProofSuccess, [challengeId]);
       const [achievementStatistics] = await conn.query(challengeQuery.getAchievementStatistics, [challengeId]);
 
-      
+
       return res.status(200).json({
         countAllchallengers: countAllchallengers[0].all_challengers,
         countPasschallengers: countPasschallengers[0].pass_challengers,
@@ -532,11 +532,7 @@ export const getProofPictureDetail = async (req, res) => {
 
 
 
-
-
-
-
-//////////보너스 환급///////////////
+///////////////보너스 환급///////////////
 export const refundChallengeBonus = async (req, res, next) => {
   try {
     let { challengeId } = req.params;
@@ -592,7 +588,7 @@ export const refundChallengeBonus = async (req, res, next) => {
         };
 
         await conn.query(challengeQuery.successBonusRefund, [challengeId, userId]);
-        await conn.query(challengeQuery.successDepositRefund2, [refundAmount,challengeId]);
+        await conn.query(challengeQuery.successDepositRefund2, [refundAmount, challengeId]);
         next();
       }
       else {
@@ -615,7 +611,7 @@ export const refundChallengeBonus = async (req, res, next) => {
 
 
 
-////////////자동환급//////////////
+///////////////자동환급///////////////
 export const refundDeposit_Auto = async function () {
   try {
     let allAmount = 0;
@@ -639,20 +635,51 @@ export const refundDeposit_Auto = async function () {
             refundAmount = deposit * (achievement_rate / 100);
             allAmount += refundAmount;
           }
-          else if(achievement_rate<50){
+          else if (achievement_rate < 50) {
             refundAmount = 0;
           }
 
-          
+
           refundDepositPoint(userId, refundAmount, challengeId);
           await conn.query(challengeQuery.successDepositRefund, [challengeId, userId]);
         }
         await conn.query(challengeQuery.successDepositRefund2, [allAmount, challengeId]);
-        console.log("챌린지ID:",challengeId, "환급총액:", allAmount);
+        console.log("챌린지ID:", challengeId, "환급총액:", allAmount);
       }
     });
     console.log("보증금 자동환급 성공!");
-    
+
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
+
+///////////////자동카운트///////////////
+export const proofCountAuto = async function () {
+  try {
+    await mysqlConn(async (conn) => {
+      const [yesterday] = await conn.query(challengeQuery.getYesterday);
+      const [ydayChallenge] = await conn.query(challengeQuery.getYdayChallenge, ["%" + yesterday[0]["dayofweek"] + "%"]);
+
+      for (var i = 0; i < ydayChallenge.length; i++) {
+        const challengeId = ydayChallenge[i].challengeId;
+        const userId = ydayChallenge[i].userId;
+
+        const [proofCntOneDay] = await conn.query(challengeQuery.getProofCntOneDay, [challengeId]);
+        const [userYdayCnt] = await conn.query(challengeQuery.getUserYdayCnt, [challengeId, userId]);
+
+        if (proofCntOneDay[0]["proofCountOneDay"] == userYdayCnt[0]["userYdayCnt"]) {
+          await conn.query(challengeQuery.updateSuccessCnt, [challengeId, userId]);
+          console.log("challengeId:", challengeId, "userId:", userId, "success");
+        } else {
+          await conn.query(challengeQuery.updateFailCnt, [challengeId, userId]);
+          console.log("challengeId:", challengeId, "userId:", userId, "fail");
+        }
+      }
+    });
+    console.log("자동 카운트 성공");
   } catch (err) {
     console.log(err);
   }

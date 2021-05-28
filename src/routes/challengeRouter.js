@@ -16,7 +16,8 @@ import {
   getProofPicture,
   getProofPictureDetail,
   refundDeposit_Auto,
-  getAchievementRateInfo
+  getAchievementRateInfo,
+  proofCountAuto
 } from "../controllers/challengeController";
 import { usePoint,earnPoint } from "../controllers/pointController"
 import { challengeImgUpload, proofPictureUpload } from "../uploadMiddlewares";
@@ -99,5 +100,9 @@ schedule.scheduleJob('* * 03 * * *', () => {
   refundDeposit_Auto()
 });
 
+//챌린지 보증금 자동환급_출석
+schedule.scheduleJob('0 0 0 * * *', () => {
+  proofCountAuto()
+});
 
 export default challengeRouter;
