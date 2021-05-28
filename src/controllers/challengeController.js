@@ -32,7 +32,8 @@ export const getAchievementRateInfo = async (req, res) => {
     await mysqlConn(async (conn) => {
       const [countAllchallengers] = await conn.query(challengeQuery.countAllchallengers, [challengeId]);
       const [countPasschallengers] = await conn.query(challengeQuery.countPasschallengers, [challengeId]);
-      const [countDailyProofSuccess] = await conn.query(challengeQuery.getDailyProofSuccess, [challengeId]);
+      const [proofCntOneDay] = await conn.query(challengeQuery.getProofCntOneDay, [challengeId]);
+      const [countDailyProofSuccess] = await conn.query(challengeQuery.getDailyProofSuccess, [challengeId, proofCntOneDay[0].proofCountOneDay]);
       const [achievementStatistics] = await conn.query(challengeQuery.getAchievementStatistics, [challengeId]);
 
 

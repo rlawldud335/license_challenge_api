@@ -50,5 +50,5 @@ export const getDepositBalance = "SELECT refund, balance_deposit FROM challenge 
 ///////////challenge Info///////////
 export const countAllchallengers = "SELECT COUNT(*) AS all_challengers FROM join_challenge WHERE challengeId = ?"
 export const countPasschallengers = "SELECT COUNT(*) AS pass_challengers FROM join_challenge WHERE challengeId = ? AND pass=1"
-export const getDailyProofSuccess = "SELECT challengeId, userId FROM proof_picture WHERE challengeId= 64 AND proofDt > CURDATE( ) AND proof=0 GROUP BY challengeId, userId HAVING COUNT(*) >= 2"
+export const getDailyProofSuccess = "SELECT challengeId, userId FROM proof_picture WHERE challengeId= 64 AND proofDt > CURDATE( ) AND proof=0 GROUP BY challengeId, userId HAVING COUNT(*) >= ?"
 export const getAchievementStatistics = "SELECT COUNT(CASE WHEN  0<= achievement_rate AND achievement_rate <= 20 THEN 1 END) AS 'to20', COUNT(CASE WHEN  20< achievement_rate AND achievement_rate <= 40 THEN 1 END) AS 'to40', COUNT(CASE WHEN  40< achievement_rate AND achievement_rate <= 60 THEN 1 END) AS 'to60', COUNT(CASE WHEN  60< achievement_rate AND achievement_rate <= 80 THEN 1 END) AS 'to80', COUNT(CASE WHEN achievement_rate > 80 THEN 1 END) AS 'to100' FROM (SELECT challengeId, userId, ROUND(IFNULL((successCnt/(successCnt+failCnt)*100),0)) AS achievement_rate FROM join_challenge WHERE challengeId = ?) A"
