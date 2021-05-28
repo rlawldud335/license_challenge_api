@@ -439,24 +439,24 @@ export const createProofPicture = async (req, res) => {
 
     await mysqlConn(async (conn) => {
       //오늘 날짜
-      var today = await conn.query(challengeQuery.getToday);
+      const [today] = await conn.query(challengeQuery.getToday);
       //인증가능요일
-      var proofAvailableDay = await conn.query(challengeQuery.getProofAvailableDay, [challengeId]);
+      const [proofAvailableDay] = await conn.query(challengeQuery.getProofAvailableDay, [challengeId]);
       //하루 인증 횟수
-      var proofCntOneDay = await conn.query(challengeQuery.getProofCntOneDay, [challengeId]);
+      const [proofCntOneDay] = await conn.query(challengeQuery.getProofCntOneDay, [challengeId]);
       //일주일 인증 횟수
-      var proofCnt = await conn.query(challengeQuery.getProofCnt, [challengeId]);
+      const [proofCnt] = await conn.query(challengeQuery.getProofCnt, [challengeId]);
       //사용자 하루 인증 횟수
-      var userDayCnt = await conn.query(challengeQuery.getUserDayCnt, [challengeId, req.user.userId]);
+      const [userDayCnt] = await conn.query(challengeQuery.getUserDayCnt, [challengeId, req.user.userId]);
       //사용자 일주일 인증 횟수
-      var userWeekCnt = await conn.query(challengeQuery.getUserWeekCnt, [challengeId, req.user.userId]);
+      const [userWeekCnt] = await conn.query(challengeQuery.getUserWeekCnt, [challengeId, req.user.userId]);
 
-      var today1 = today[0][0].dayofweek;
-      var proofAvailableDay1 = proofAvailableDay[0][0].proofAvailableDay;
-      var proofCntOneDay1 = proofCntOneDay[0][0].proofCountOneDay;
-      var proofCnt1 = proofCnt[0][0].proofCount;
-      var userDayCnt1 = userDayCnt[0][0].userDayCnt;
-      var userWeekCnt1 = userWeekCnt[0][0].userWeekCnt;
+      var today1 = today[0]["dayofweek"];
+      var proofAvailableDay1 = proofAvailableDay[0]["proofAvailableDay"];
+      var proofCntOneDay1 = proofCntOneDay[0]["proofCountOneDay"];
+      var proofCnt1 = proofCnt[0]["proofCount"];
+      var userDayCnt1 = userDayCnt[0]["userDayCnt"];
+      var userWeekCnt1 = userWeekCnt[0]["userWeekCnt"];
 
       console.log(proofCntOneDay1, userDayCnt1, proofCntOneDay1, proofCnt1, userWeekCnt1);
       console.log(proofAvailableDay1, today1);
@@ -473,6 +473,13 @@ export const createProofPicture = async (req, res) => {
             proofImage.location,
             body.dailyReview
           ]);
+
+          const [userDayCnt2] = await conn.query(challengeQuery.getUserDayCnt, [challengeId, req.user.userId]);
+          if(userDayCnt2[0]["userDayCnt"] == proofCntOneDay1) {
+            await conn.query(challengeQuery.updateSuccessCnt, [challengeId, req.user.userId]);
+            await conn.query(challengeQuery.updateProof, [challengeId, req.user.userId]);
+          }
+          
           return res.status(200).json({
             code: 200,
             success: true,
@@ -670,10 +677,7 @@ export const proofCountAuto = async function () {
         const [proofCntOneDay] = await conn.query(challengeQuery.getProofCntOneDay, [challengeId]);
         const [userYdayCnt] = await conn.query(challengeQuery.getUserYdayCnt, [challengeId, userId]);
 
-        if (proofCntOneDay[0]["proofCountOneDay"] == userYdayCnt[0]["userYdayCnt"]) {
-          await conn.query(challengeQuery.updateSuccessCnt, [challengeId, userId]);
-          console.log("challengeId:", challengeId, "userId:", userId, "success");
-        } else {
+        if (proofCntOneDay[0]["proofCountOneDay"] != userYdayCnt[0]["userYdayCnt"]) {
           await conn.query(challengeQuery.deleteProofImage, [challengeId, userId]);
           await conn.query(challengeQuery.updateFailCnt, [challengeId, userId]);
           console.log("challengeId:", challengeId, "userId:", userId, "fail");

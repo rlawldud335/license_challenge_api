@@ -25,11 +25,12 @@ export const getProofCntOneDay = "SELECT proofCountOneDay FROM challenge WHERE c
 export const getProofCnt = "SELECT proofCount from challenge where challengeId = ?"
 export const getUserDayCnt = "SELECT COUNT(*) AS userDayCnt FROM proof_picture WHERE challengeId = ? AND userId = ? AND date(proofDt) = date(curdate())"
 export const getUserWeekCnt = "SELECT COUNT(*) AS userWeekCnt FROM proof_picture WHERE date_format(proofDt,'%Y-%m-%d') BETWEEN (SELECT ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 0 )) AND (SELECT ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 6 )) AND challengeId = ? AND userId = ?"
+export const updateSuccessCnt = "UPDATE join_challenge SET successCnt = successCnt + 1 WHERE challengeId = ? AND userId = ?"
+export const updateProof = "UPDATE proof_picture SET proof = 1 WHERE challengeId = ? AND userId = ?" 
 
 export const getYesterday = "SELECT case DAYOFWEEK(CURDATE()-1) when '1' then '일' when '2' then '월' when '3' then '화' when '4' then '수' when '5' then '목' when '6' then '금' when '7' then '토' end as dayofweek"
 export const getYdayChallenge = "SELECT join_challenge.challengeId, join_challenge.userId FROM challenge, join_challenge WHERE challenge.challengeId = join_challenge.challengeId AND challenge.proofAvailableDay LIKE ?"
 export const getUserYdayCnt = "SELECT COUNT(*) AS userYdayCnt FROM proof_picture WHERE challengeId = ? AND userId = ? AND date(proofDt) = date(curdate()-1)"
-export const updateSuccessCnt = "UPDATE join_challenge SET successCnt = successCnt + 1 WHERE challengeId = ? AND userId = ?"
 export const updateFailCnt = "UPDATE join_challenge SET failCnt = failCnt + 1 WHERE challengeId = ? AND userId = ?"
 export const deleteProofImage = "DELETE FROM proof_picture WHERE challengeId = ? AND userId = ?"
 
