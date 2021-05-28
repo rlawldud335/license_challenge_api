@@ -475,27 +475,27 @@ export const createProofPicture = async (req, res) => {
           ]);
 
           const [userDayCnt2] = await conn.query(challengeQuery.getUserDayCnt, [challengeId, req.user.userId]);
-          if(userDayCnt2[0]["userDayCnt"] == proofCntOneDay1) {
+          if (userDayCnt2[0]["userDayCnt"] == proofCntOneDay1) {
             await conn.query(challengeQuery.updateSuccessCnt, [challengeId, req.user.userId]);
             await conn.query(challengeQuery.updateProof, [challengeId, req.user.userId]);
           }
-          
+
           return res.status(200).json({
             code: 200,
             success: true,
-            message: 'create proofPicture',
+            message: "create proofPicture",
             proofImage: proofImage.location
           });
         } else {
-          return res.status(401).json({
-            code: 401,
+          return res.status(200).json({
+            code: 200,
             success: false,
             message: "You have already completed the number of authentications"
           });
         }
       } else {
-        return res.status(401).json({
-          code: 401,
+        return res.status(200).json({
+          code: 200,
           success: false,
           message: "It is not a certifiable day of the week"
         });
