@@ -17,7 +17,7 @@ export const getChallengeEndDt = "SELECT chgEndDt FROM challenge WHERE challenge
 
 export const createProofPicture = "INSERT INTO proof_picture(challengeId, userId, proofImage, dailyReview, reportCnt, proof) VALUES(?, ?, ?, ?, 0, 0)"
 export const getProofPicture = "SELECT pictureId, proofImage FROM proof_picture WHERE challengeId = ? ORDER BY proofDt DESC LIMIT "
-export const getProofPictureDetail = "SELECT pp.pictureId, pp.proofImage, u.nickname, pp.dailyReview, pp.proofDt, pp.reportCnt FROM proof_picture pp, user u WHERE pp.userId = u.userId AND pp.challengeId = ? AND pp.pictureId = ?"
+export const getProofPictureDetail = "SELECT pp.pictureId, pp.proofImage, u.profileImage, u.nickname, pp.dailyReview, pp.proofDt, pp.reportCnt FROM proof_picture pp, user u WHERE pp.userId = u.userId AND pp.challengeId = ? AND pp.pictureId = ?"
 
 export const getToday = "SELECT case DAYOFWEEK(CURDATE()) when '1' then '일' when '2' then '월' when '3' then '화' when '4' then '수' when '5' then '목' when '6' then '금' when '7' then '토' end as dayofweek"
 export const getProofAvailableDay = "SELECT proofAvailableDay from challenge where challengeId = ?"
