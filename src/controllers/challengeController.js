@@ -109,13 +109,10 @@ export const getCategoryChallenge = async (req, res) => {
           numOfRows;
         const [data] = await conn.query(query);
         return res.status(200).json(data);
-      } else if (category == "자격증") {
-        const query = challengeQuery.getLicenseChallenges + pageNum * numOfRows + "," + numOfRows;
-        const [data] = await conn.query(query, [category]);
-        return res.status(200).json(data);
+
       } else {
-        const query = challengeQuery.getOtherChallenges + pageNum * numOfRows + "," + numOfRows;
-        const [data] = await conn.query(query, [category]);
+        const query = challengeQuery.getCategoryChallenges + pageNum * numOfRows + "," + numOfRows;
+        const [data] = await conn.query(query, ["%"+category+"%"]);
         return res.status(200).json(data);
       }
     });
@@ -132,9 +129,7 @@ export const getChallenge = async (req, res) => {
     // } = req;
     let { challengeId } = req.params;
     await mysqlConn(async (conn) => {
-      const [data] = await conn.query(challengeQuery.getOneChallenge, [
-        challengeId, challengeId
-      ]);
+      const [data] = await conn.query(challengeQuery.getOneChallenge, [challengeId]);
       return res.status(200).json(data[0]);
     });
   } catch (err) {
@@ -571,7 +566,7 @@ export const refundChallengeBonus = async (req, res, next) => {
         });
       }
 
-      const [check] = await conn.query(challengeQuery.checkBonus, [userId, challengeId, userId, challengeId]);
+      const [check] = await conn.query(challengeQuery.checkBonus, [userId, challengeId]);
       const [count] = await conn.query(challengeQuery.countBonusUsers, [challengeId]);
       let refundAmount = 0;
       const userCount = count[0].count;
