@@ -9,14 +9,26 @@ export const getAchievementRate = async (req, res) => {
 
   try {
     await mysqlConn(async (conn) => {
-      const query = challengeQuery.getAchievementRate;
-      const [data] = await conn.query(query, [userId, challengeId]);
+      const [data] = await conn.query(challengeQuery.getAchievementRate, [userId, challengeId]);
+      const [proof] = await conn.query(challengeQuery.getUserDayCnt, [challengeId, userId]);
+      const [proof2] = await conn.query(challengeQuery.getUserWeekCnt, [challengeId, userId]);
       if (data[0].pass) {
         data[0].pass = "인증완료"
       } else if (!data[0].pass) {
         data[0].pass = "인증미완료"
       }
-      return res.status(200).json(data[0]);
+
+      return res.status(200).json({
+        challengeId: data[0].challengeId,
+        challengeTitle: data[0].challengeTitle,
+        successCnt: data[0].successCnt,
+        failCnt: data[0].failCnt,
+        achievement_rate: data[0].achievement_rate,
+        pass: data[0].pass,
+        passImage: data[0].passImage,
+        userDayCnt: proof[0].userDayCnt,
+        userWeekCnt: proof2[0].userWeekCnt
+      });
     });
   } catch (err) {
     console.log(err);
