@@ -71,7 +71,9 @@ export const getOngoingChallenge = async (req, res) => {
   try {
     await mysqlConn(async (conn) => {
       const query = challengeQuery.getOngoingChallenge;
+      console.log("1번")
       const [data] = await conn.query(query, [userId, userId]);
+      console.log(data)
       return res.status(200).json(data);
     });
   } catch (err) {
