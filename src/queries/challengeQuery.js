@@ -73,7 +73,7 @@ export const getToday = "SELECT case DAYOFWEEK(CURDATE()) when '1' then '일' wh
 export const getProofAvailableDay = "SELECT proofAvailableDay from challenge where challengeId = ?"
 export const getProofCntOneDay = "SELECT proofCountOneDay FROM challenge WHERE challengeId = ?"
 export const getProofCnt = "SELECT proofCount from challenge where challengeId = ?"
-export const getUserDayCnt = "SELECT COUNT(*) AS userDayCnt FROM proof_picture WHERE challengeId = ? AND userId = ? AND date(proofDt) = date(curdate())"
+export const getUserDayCnt = "SELECT COUNT(*) AS userDayCnt FROM proof_picture WHERE challengeId = ? AND userId = ? AND date(proofDt) >= date(curdate())"
 export const getUserWeekCnt = "SELECT COUNT(*) AS userWeekCnt FROM proof_picture WHERE date_format(proofDt,'%Y-%m-%d') BETWEEN (SELECT ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 0 )) AND (SELECT ADDDATE(CURDATE(), - WEEKDAY(CURDATE()) + 6 )) AND challengeId = ? AND userId = ?"
 export const updateSuccessCnt = "UPDATE join_challenge SET successCnt = successCnt + 1 WHERE challengeId = ? AND userId = ?"
 export const updateProof = "UPDATE proof_picture SET proof = 1 WHERE challengeId = ? AND userId = ?"
