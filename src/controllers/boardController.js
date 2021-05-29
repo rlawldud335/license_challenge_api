@@ -333,10 +333,6 @@ export const createComment = async (req, res) => {
         body.level,
         body.precedingComment,
       ]);
-      await conn.query(boardQuery.updateComment, [
-        body.content,
-        commentId
-      ]);
       return res.status(200).json({
         code: 200,
         success: true,
@@ -368,7 +364,7 @@ export const deleteComment = async (req, res) => {
 
 export const updateComment = async (req, res) => {
   try {
-    let { boardId, commentId } = req.params;
+    let { commentId } = req.params;
     const body = req.body;
     await mysqlConn(async (conn) => {
       await conn.query(boardQuery.updateComment, [
