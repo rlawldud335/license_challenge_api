@@ -19,7 +19,7 @@ export const purchaseFile = "UPDATE attached_file SET purchaser = ? WHERE fileId
 
 export const searchBoard = "SELECT * FROM license_challenge.board WHERE concat(title, content) regexp ? ORDER BY createDt DESC;";
 export const getBoardsOfWriter = "SELECT * FROM license_challenge.board WHERE userId = ? ORDER BY createDt DESC";
-export const getComment = "SELECT * FROM license_challenge.board_comment WHERE boardId = ?";
+export const getComment = "SELECT commentId, boardId, u.nickname, content, createDt, editDt, level, precedingComment FROM board_comment bc, user u WHERE boardId = ? AND bc.userId = u.userId";
 export const createComment = "INSERT INTO license_challenge.board_comment (boardId, userId, content, level, precedingComment) VALUES (?, ?, ?, ?, ?)";
 export const deleteComment = "DELETE FROM license_challenge.board_comment where boardId = ? AND commentId = ?";
 export const updateComment = "UPDATE `license_challenge`.`board_comment` SET `content` = ?, `editDt` = now() WHERE commentId = ?;";

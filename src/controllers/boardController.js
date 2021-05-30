@@ -156,14 +156,19 @@ export const getSaleBoardDetail = async (req, res) => {
     let { boardId } = req.params;
     await mysqlConn(async (conn) => {
       var purchaser = await conn.query(boardQuery.getPurchaser, [boardId]);
-      var value = purchaser[0][0].purchaser.indexOf(req.user.userId);
 
-      if(value != -1) {
-        const [data] = await conn.query(boardQuery.getSaleBoardPurchaser, [boardId]);
-        return res.status(200).json(data);
-      } else {
+      if (purchaser[0]["purchaser"] == null) {
         const [data] = await conn.query(boardQuery.getSaleBoardNoPurchaser, [boardId]);
         return res.status(200).json(data);
+      } else {
+        var value = purchaser[0]["purchaser"].indexOf(req.user.userId);
+        if (value != -1) {
+          const [data] = await conn.query(boardQuery.getSaleBoardPurchaser, [boardId]);
+          return res.status(200).json(data);
+        } else {
+          const [data] = await conn.query(boardQuery.getSaleBoardNoPurchaser, [boardId]);
+          return res.status(200).json(data);
+        }
       }
     });
   } catch (err) {
@@ -279,7 +284,7 @@ export const purchaseFile = async (req, res, next) => {
     await mysqlConn(async (conn) => {
       const [purchaser] = await conn.query(boardQuery.purchaserId, [userId + ", ", fileId]);
       await conn.query(boardQuery.purchaseFile, [purchaser[0]["purchaser"], fileId]);
-      
+
       const [sellerId] = await conn.query(pointQuery.getSellerId, [boardId]);
       await conn.query(pointQuery.earnPoint, [sellerId[0]["userId"], targetType, targetId, point, sellerId[0]["userId"], point]);
       await conn.query(pointQuery.plusBalance, [point, sellerId[0]["userId"]]);
@@ -291,8 +296,8 @@ export const purchaseFile = async (req, res, next) => {
         message: "purchase File & Earn Point",
         boardId: boardId,
         fileId: fileId,
-        purchaserId : userId,
-        purchaserPoint : point,
+        purchaserId: userId,
+        purchaserPoint: point,
         sellerId: balance1[0]["userId"],
         sellerPoint: balance1[0]["point"]
       });
