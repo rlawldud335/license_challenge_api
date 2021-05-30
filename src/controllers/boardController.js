@@ -67,23 +67,22 @@ export const getSaleBoard = async (req, res) => {
 export const createFreeBoard = async (req, res) => {
   try {
     const body = req.body;
-    const image = req.files;
-    const path = image.map(img => img.location);
+    const image = req.file;
 
-    console.log("s3 freeboardImage 경로 :", path);
+    console.log("s3 freeboardImage 경로 :", image.location);
 
     await mysqlConn(async (conn) => {
       await conn.query(boardQuery.createFreeBoard, [
         req.user.userId,
         body.title,
         body.content,
-        path.toString()
+        image.location,
       ]);
       return res.status(200).json({
         code: 200,
         success: true,
         message: 'create freeboard',
-        image: path
+        image: image.location
       });
     });
   } catch (err) {
@@ -182,24 +181,23 @@ export const getSaleBoardDetail = async (req, res) => {
 export const updateFreeBoard = async (req, res) => {
   try {
     const body = req.body;
-    const image = req.files;
-    const path = image.map(img => img.location);
+    const image = req.file;
     let { boardId } = req.params;
 
-    console.log("s3 freeboardImage 경로 :", path);
+    console.log("s3 freeboardImage 경로 :", image.location);
 
     await mysqlConn(async (conn) => {
       await conn.query(boardQuery.updateBoard, [
         body.title,
         body.content,
-        path.toString(),
+        image.location,
         boardId
       ]);
       return res.status(200).json({
         code: 200,
         success: true,
         message: 'update freeboard',
-        image: path
+        image: image.location
       });
     });
   } catch (err) {

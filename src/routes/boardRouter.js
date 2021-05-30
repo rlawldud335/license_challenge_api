@@ -30,7 +30,7 @@ boardRouter.get(routes.freeBoard, getFreeBoard);
 boardRouter.get(routes.saleBoard, getSaleBoard);
 
 //자유_게시글 등록
-boardRouter.post(routes.freeBoard, boardImgUpload.array('image', 5), createFreeBoard);
+boardRouter.post(routes.freeBoard, boardImgUpload.single('image'), createFreeBoard);
 //판매_게시글 등록
 boardRouter.post(routes.saleBoard,
     boardFileUpload.fields([
@@ -47,7 +47,7 @@ boardRouter.get(routes.freeBoardDetail, getFreeBoardDetail);
 boardRouter.get(routes.saleBoardDetail, getSaleBoardDetail);
 
 //자유_게시글 수정
-boardRouter.put(routes.freeBoardDetail, boardImgUpload.array('image', 5), updateFreeBoard);
+boardRouter.put(routes.freeBoardDetail, boardImgUpload.single('image'), updateFreeBoard);
 //판매_게시글 수정
 boardRouter.put(routes.saleBoardDetail,
     boardFileUpload.fields([
