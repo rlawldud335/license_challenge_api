@@ -157,11 +157,13 @@ export const getSaleBoardDetail = async (req, res) => {
     await mysqlConn(async (conn) => {
       var purchaser = await conn.query(boardQuery.getPurchaser, [boardId]);
 
-      if (purchaser[0]["purchaser"] == null) {
+      console.log(purchaser[0][0].purchaser);
+      if (purchaser[0][0].purchaser == null) {
         const [data] = await conn.query(boardQuery.getSaleBoardNoPurchaser, [boardId]);
         return res.status(200).json(data);
       } else {
-        var value = purchaser[0]["purchaser"].indexOf(req.user.userId);
+        var value = purchaser[0][0].purchaser.indexOf(req.user.userId);
+        console.log(value);
         if (value != -1) {
           const [data] = await conn.query(boardQuery.getSaleBoardPurchaser, [boardId]);
           return res.status(200).json(data);
