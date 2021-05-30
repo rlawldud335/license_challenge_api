@@ -1,12 +1,12 @@
 export const getAllChallenge = "\
-    SELECT      challengeId, challengeTitle, challenge.challengeCategory, licenseName, proofCount, proofCountOneDay, challengeTitleImage, deposit, chgStartDt, chgEndDt, challengeCreateDt \
+    SELECT      challengeId, challengeTitle, challenge.challengeCategory, licenseName, proofCount, proofCountOneDay, proofAvailableDay, challengeTitleImage, deposit, chgStartDt, chgEndDt, challengeCreateDt \
     FROM        challenge \
         LEFT JOIN license ON(challenge.licenseId = license.licenseId) \
     WHERE       chgStartDt>=curdate() \
     ORDER BY    challengeCreateDt DESC LIMIT "
 
 export const getCategoryChallenges = "\
-    SELECT      challengeId, challengeTitle, challenge.challengeCategory, licenseName, proofCount, proofCountOneDay, challengeTitleImage, deposit, chgStartDt, chgEndDt, challengeCreateDt \
+    SELECT      challengeId, challengeTitle, challenge.challengeCategory, licenseName, proofCount, proofCountOneDay, proofAvailableDay, challengeTitleImage, deposit, chgStartDt, chgEndDt, challengeCreateDt \
     FROM        challenge LEFT JOIN license ON(challenge.licenseId = license.licenseId) \
     WHERE       chgStartDt>=curdate() AND challengeCategory LIKE ? \
     ORDER BY    challengeCreateDt DESC LIMIT "
@@ -44,7 +44,7 @@ export const getEndedChallenge = "\
     ORDER BY    challengeCreateDt DESC"
 
 export const searchChallenge = "\
-    SELECT      challengeId, challengeTitle, licenseName,  challengeIntroduction, proofCount, proofCountOneDay, challengeTitleImage, deposit , chgStartDt, chgEndDt, challengeCreateDt \
+    SELECT      challengeId, challengeTitle, licenseName,  challengeIntroduction, proofCount, proofCountOneDay, proofAvailableDay, challengeTitleImage, deposit , chgStartDt, chgEndDt, challengeCreateDt \
     FROM        challenge LEFT JOIN license ON(challenge.licenseId = license.licenseId) \
     WHERE       concat(challengeTitle, licenseName, challengeIntroduction) regexp ? \
     ORDER BY    challengeCreateDt DESC LIMIT "

@@ -165,6 +165,20 @@ export const earnPoint = async (req, res) => {
       await conn.query(pointQuery.plusBalance, [point, userId]);
       const [balance2] = await conn.query(pointQuery.getPoint, [userId]);
 
+      if(req.body.success==false){
+        return res.status(200).json({
+          code: 200,
+          success: false,
+          message: "Earn Point",
+          userId: balance2[0]["userId"],
+          targetType: targetType,
+          targetId: targetId,
+          "Earn amount": point,
+          balance: balance2[0]["point"]
+        });
+
+      }
+
       return res.status(200).json({
         code: 200,
         success: true,
