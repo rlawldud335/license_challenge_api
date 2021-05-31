@@ -1,3 +1,5 @@
+export const getJoinPeopleList = "SELECT nickname, profileImage FROM user, join_challenge J WHERE challengeId=? And user.userId=J.userId";
+
 export const getAllChallenge = "\
     SELECT      challengeId, challengeTitle, challenge.challengeCategory, licenseName, proofCount, proofCountOneDay, proofAvailableDay, challengeTitleImage, deposit, chgStartDt, chgEndDt, challengeCreateDt \
     FROM        challenge \

@@ -3,6 +3,21 @@ import { refundDepositPoint } from "../controllers/pointController"
 import { now } from "mongoose";
 const challengeQuery = require("../queries/challengeQuery");
 
+export const getJoinPeopleList = async (req, res) => {
+  let { challengeId } = req.params;
+  
+  try {
+    await mysqlConn(async (conn) => {
+      const query = challengeQuery.getJoinPeopleList;
+      const [data] = await conn.query(query, [challengeId]);
+      return res.status(200).json(data);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
 export const getAchievementRate = async (req, res) => {
   const userId = req.user.userId;
   let { challengeId } = req.params;

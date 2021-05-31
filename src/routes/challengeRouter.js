@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getJoinPeopleList,
   getCategoryChallenge,
   getChallenge,
   createChallenge,
@@ -17,7 +18,7 @@ import {
   getProofPictureDetail,
   refundDeposit_Auto,
   getAchievementRateInfo,
-  proofCountAuto
+  proofCountAuto,
 } from "../controllers/challengeController";
 import { usePoint, earnPoint } from "../controllers/pointController"
 import { challengeImgUpload, proofPictureUpload } from "../uploadMiddlewares";
@@ -73,6 +74,9 @@ challengeRouter.get("/:challengeId/achievement-rate", getAchievementRate);
 
 //챌린지 참여자 달성률 통계 조회
 challengeRouter.get("/:challengeId/achievement-rate-info", getAchievementRateInfo);
+
+// 참가자 리스트 조회
+challengeRouter.get("/:challengeId/join-people", getJoinPeopleList);
 
 //챌린지 상세조회
 challengeRouter.get("/:challengeId", getChallenge);
