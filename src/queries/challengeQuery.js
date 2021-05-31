@@ -23,8 +23,8 @@ export const createLicenseChallenge = "\
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
 
 export const createOtherChallenge = "\
-    INSERT INTO challenge (challengeTitle, challengeCategory, leaderId, proofMethod, proofAvailableDay, proofCount, proofCountOneDay, chgStartDt, chgEndDt, challengeTitleImage, challengeIntroduction, goodProofImage, badProofImage, deposit, limitPeople, joinPeople) \
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1);"
+    INSERT INTO challenge (challengeTitle, challengeCategory, leaderId, proofMethod, proofAvailableDay, proofCount, proofCountOneDay, chgStartDt, chgEndDt, challengeTitleImage, challengeIntroduction, goodProofImage, badProofImage, deposit, limitPeople, balance_deposit) \
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
 
 export const updateChallenge = "\
     UPDATE challenge \
