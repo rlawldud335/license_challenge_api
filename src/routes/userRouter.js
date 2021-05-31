@@ -7,7 +7,7 @@ const userRouter = express.Router();
 // 회원정보 조회
 userRouter.get(routes.userInfo, readUserInfo);
 // 회원정보 수정
-userRouter.post(routes.userInfo, updateUserInfo);
+userRouter.put(routes.userInfo, updateUserInfo);
 // 회원 탈퇴
 userRouter.delete(routes.withdrawal, withdrawal);
 
