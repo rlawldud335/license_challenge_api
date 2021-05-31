@@ -255,6 +255,7 @@ export const requestPay = async (req, res) => {
         merchant_uid: merchant_uid,
         pay_method: body.pay_method,
         amount: body.amount,
+        buyer_name: buyer.nickname,
         buyer_email: buyer.email,
         buyer_tel: buyer.phoneNumber
       });
