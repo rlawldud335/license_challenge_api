@@ -95,6 +95,7 @@ export const createSaleBoard = async (req, res) => {
   try {
     var path;
     const body = req.body;
+    var user = req.user.userId + ", ";
 
     if (req.files["image"] && req.files["image"].length > 0) {
       const image = req.files["image"][0];
@@ -120,7 +121,8 @@ export const createSaleBoard = async (req, res) => {
         data.insertId,
         previewFile.location.toString(),
         allFile.location.toString(),
-        body.price
+        body.price,
+        user,
       ]);
       return res.status(200).json({
         code: 200,
