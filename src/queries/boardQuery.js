@@ -7,7 +7,7 @@ export const getPurchaser = "SELECT purchaser FROM attached_file WHERE boardId =
 
 export const createFreeBoard = "INSERT INTO board (userId, category, title, content, image) VALUES (?, 'freeboard', ?, ?, ?)";
 export const createSaleBoard = "INSERT INTO board (userId, category, title, content, image) VALUES (?, 'saleboard', ?, ?, ?)";
-export const createAttachedFile = "INSERT INTO attached_file (boardId, previewFile, allFile, price) VALUES (?, ?, ?, ?)";
+export const createAttachedFile = "INSERT INTO attached_file (boardId, previewFile, allFile, price, purchaser) VALUES (?, ?, ?, ?, ?)";
 
 export const updateBoard = "UPDATE board SET title=?, content=?, image=?, editDt=now() WHERE boardId = ?";
 export const updateAttachedFile = "UPDATE attached_file SET previewFile=?, allFile=?, price=? WHERE boardId = ?";
@@ -23,4 +23,4 @@ export const getBoardsOfWriter = "SELECT * FROM license_challenge.board WHERE us
 export const getComment = "SELECT commentId, boardId, u.nickname, content, createDt, editDt, level, precedingComment FROM board_comment bc, user u WHERE boardId = ? AND bc.userId = u.userId";
 export const createComment = "INSERT INTO license_challenge.board_comment (boardId, userId, content, level, precedingComment) VALUES (?, ?, ?, ?, ?)";
 export const deleteComment = "DELETE FROM license_challenge.board_comment where boardId = ? AND commentId = ?";
-export const updateComment = "UPDATE `license_challenge`.`board_comment` SET `content` = ?, `editDt` = now() WHERE commentId = ?;";
+export const updateComment = "UPDATE `license_challenge`.`board_comment` SET `content` = ?, `editDt` = now() WHERE commentId = ?";
