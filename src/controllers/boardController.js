@@ -282,9 +282,16 @@ export const purchaseFile = async (req, res, next) => {
   }
   try {
     await mysqlConn(async (conn) => {
-      const [purchaser] = await conn.query(boardQuery.purchaserId, [userId + ", ", fileId]);
-      await conn.query(boardQuery.purchaseFile, [purchaser[0]["purchaser"], fileId]);
-
+      const [purchaser] = await conn.query(boardQuery.purchaser, [fileId]);
+      var user = userId + ", ";
+      console.log(purchaser);
+      if (purchaser[0]["purchaser"] == null || purchaser[0]["purchaser"] == "") {
+        await conn.query(boardQuery.purchaseFile, [user, fileId]);
+      } else {
+        const [purchaserId] = await conn.query(boardQuery.purchaserId, [userId + ", ", fileId]);
+        console.log(purchaserId);
+        await conn.query(boardQuery.purchaseFile, [purchaserId[0]["purchaserId"], fileId]);
+      }
       const [sellerId] = await conn.query(pointQuery.getSellerId, [boardId]);
       await conn.query(pointQuery.earnPoint, [sellerId[0]["userId"], targetType, targetId, point, sellerId[0]["userId"], point]);
       await conn.query(pointQuery.plusBalance, [point, sellerId[0]["userId"]]);
