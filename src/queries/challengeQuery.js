@@ -48,7 +48,7 @@ export const getEndedChallenge = "\
 export const searchChallenge = "\
     SELECT      challengeId, challengeTitle, licenseName,  challengeIntroduction, proofCount, proofCountOneDay, proofAvailableDay, challengeTitleImage, deposit , chgStartDt, chgEndDt, challengeCreateDt \
     FROM        challenge LEFT JOIN license ON(challenge.licenseId = license.licenseId) \
-    WHERE       WHERE (concat(challengeTitle, challengeIntroduction) regexp ? OR licenseName regexp ? ) AND chgStartDt>=curdate() \
+    WHERE       (concat(challengeTitle, challengeIntroduction) regexp ? OR licenseName regexp ? ) AND chgStartDt>=curdate() \
     ORDER BY    challengeCreateDt DESC LIMIT "
 
 export const getAchievementRate = "\
