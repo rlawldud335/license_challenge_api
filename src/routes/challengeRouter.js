@@ -100,7 +100,7 @@ challengeRouter.post("/:challengeId/refund-bonus",
 );
 
 //챌린지 보증금 자동환급_출석
-schedule.scheduleJob('* * 03 * * *', () => {
+schedule.scheduleJob('0 0 3 * * *', () => {
   refundDeposit_Auto()
 });
 
