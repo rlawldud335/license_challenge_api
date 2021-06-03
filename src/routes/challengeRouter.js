@@ -11,7 +11,6 @@ import {
   getAchievementRate,
   enterChallenge,
   updateChallenge,
-  refundChallengeDeposit,
   refundChallengeBonus,
   createProofPicture,
   getProofPicture,

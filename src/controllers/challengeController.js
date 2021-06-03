@@ -33,6 +33,13 @@ export const getAchievementRate = async (req, res) => {
         data[0].pass = "인증미완료"
       }
 
+      const [countAllchallengers] = await conn.query(challengeQuery.countAllchallengers, [challengeId]);
+      const [countPasschallengers] = await conn.query(challengeQuery.countPasschallengers, [challengeId]);
+      const [proofCntOneDay] = await conn.query(challengeQuery.getProofCntOneDay, [challengeId]);
+      const [countDailyProofSuccess] = await conn.query(challengeQuery.getDailyProofSuccess, [challengeId, proofCntOneDay[0].proofCountOneDay]);
+      const [achievementStatistics] = await conn.query(challengeQuery.getAchievementStatistics, [challengeId]);
+
+
       return res.status(200).json({
         challengeId: data[0].challengeId,
         challengeTitle: data[0].challengeTitle,
@@ -41,8 +48,14 @@ export const getAchievementRate = async (req, res) => {
         achievement_rate: data[0].achievement_rate,
         pass: data[0].pass,
         passImage: data[0].passImage,
+        refund_deposit: data[0].refund_deposit,
+        refund_bonus: data[0].refund_bonus,
         userDayCnt: proof[0].userDayCnt,
-        userWeekCnt: proof2[0].userWeekCnt
+        userWeekCnt: proof2[0].userWeekCnt,
+        countAllchallengers: countAllchallengers[0].all_challengers,
+        countPasschallengers: countPasschallengers[0].pass_challengers,
+        countDailyProofSuccess: countDailyProofSuccess.length,
+        achievementStatistics: achievementStatistics[0]
       });
     });
   } catch (err) {
@@ -361,9 +374,10 @@ export const enterChallenge = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     //실패시 보증금 환불
+    //const [data2] = await conn.query(challengeQuery.minusJoinPeople, [challengeId]);
     req.body = {
       point: deposit,
-      targetType: "챌린지 보증금 결제 실패",
+      targetType: "챌린지 보증금 환불",
       targetId: challengeId,
       success: false,
     };
@@ -599,7 +613,7 @@ export const refundChallengeBonus = async (req, res, next) => {
       let refundAmount = 0;
       const userCount = count[0].count;
 
-      if (check[0].refund_bonus) {
+      if (check[0].refund_bonus != 0) {
         return res.status(200).json({
           code: 200,
           success: false,
@@ -618,12 +632,12 @@ export const refundChallengeBonus = async (req, res, next) => {
           "targetId": challengeId
         };
 
-        await conn.query(challengeQuery.successBonusRefund, [challengeId, userId]);
+        await conn.query(challengeQuery.successBonusRefund, [refundAmount, challengeId, userId]);
         await conn.query(challengeQuery.successDepositRefund2, [refundAmount, challengeId]);
         next();
       }
       else {
-        await conn.query(challengeQuery.successBonusRefund, [challengeId, userId]);
+        await conn.query(challengeQuery.successBonusRefund, [1,challengeId, userId]);
         return res.status(200).json({
           code: 200,
           success: true,
