@@ -92,22 +92,17 @@ challengeRouter.get("/:challengeId/proof-picture", getProofPicture);
 //피드 상세 조회
 challengeRouter.get("/:challengeId/proof-picture/:pictureId", getProofPictureDetail);
 
-// //챌린지 보너스 환급
-// challengeRouter.post("/:challengeId/refund-bonus",
-//   refundChallengeBonus,
-//   earnPoint
-// );
+//챌린지 보너스 환급
+challengeRouter.post("/:challengeId/refund-bonus",
+  refundChallengeBonus,
+  earnPoint
+);
 
 //챌린지 보증금 자동환급_출석
 schedule.scheduleJob('0 0 0 * * *', () => {
   refundDeposit_Auto()
 });
 
-//챌린지 보너스 자동환급
-schedule.scheduleJob('30 0 0 * * *', () => {
-  refundChallengeBonus,
-  earnPoint
-});
 
 //챌린지 인증 성공여부 자동 체크
 schedule.scheduleJob('0 0 0 * * *', () => {

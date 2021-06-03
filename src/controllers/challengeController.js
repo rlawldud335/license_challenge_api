@@ -597,10 +597,10 @@ export const refundChallengeBonus = async (req, res, next) => {
         });
       }
       if (balance == 0) {
-        await conn.query(challengeQuery.successBonusRefund, [challengeId, userId]);
+        await conn.query(challengeQuery.successBonusRefund, [-1, challengeId, userId]);
         return res.status(200).json({
           code: 200,
-          success: true,
+          success: false,
           message: "The refund is 0",
           challengeId: challengeId,
           userId: userId,
@@ -640,7 +640,7 @@ export const refundChallengeBonus = async (req, res, next) => {
         await conn.query(challengeQuery.successBonusRefund, [-1,challengeId, userId]);
         return res.status(200).json({
           code: 200,
-          success: true,
+          success: false,
           message: "The refund is 0",
           challengeId: challengeId,
           userId: userId,
