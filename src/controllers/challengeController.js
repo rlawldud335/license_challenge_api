@@ -637,7 +637,7 @@ export const refundChallengeBonus = async (req, res, next) => {
         next();
       }
       else {
-        await conn.query(challengeQuery.successBonusRefund, [1,challengeId, userId]);
+        await conn.query(challengeQuery.successBonusRefund, [-1,challengeId, userId]);
         return res.status(200).json({
           code: 200,
           success: true,
