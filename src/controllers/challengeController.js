@@ -584,14 +584,30 @@ export const refundChallengeBonus = async (req, res, next) => {
     const userId = req.user.userId;
 
     await mysqlConn(async (conn) => {
+      const today = new Date();
+      const [enddt] =  await conn.query(challengeQuery.getChallengeEndDt, [challengeId]);
       const [data] = await conn.query(challengeQuery.getDepositBalance, [challengeId]);
       const balance = data[0].balance_deposit;
+
+      let diff = Math.abs(today - enddt[0].chgEndDt);
+      diff = Math.ceil(diff / (1000 * 3600 * 24))-1;
+
+      console.log(diff);
 
       if (!data[0].refund) {
         return res.status(200).json({
           code: 200,
           success: false,
           message: "Challenge not yet complete",
+          challengeId: challengeId,
+          userId: userId
+        });
+      }
+      else if(diff>14){
+        return res.status(200).json({
+          code: 200,
+          success: false,
+          message: "Bonus amount can only be received within 2 weeks of the end",
           challengeId: challengeId,
           userId: userId
         });
