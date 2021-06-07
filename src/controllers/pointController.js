@@ -182,7 +182,7 @@ export const earnPoint = async (req, res) => {
       return res.status(200).json({
         code: 200,
         success: true,
-        message: "Earn Point",
+        message: "챌린지 입장 성공",
         userId: balance2[0]["userId"],
         targetType: targetType,
         targetId: targetId,
