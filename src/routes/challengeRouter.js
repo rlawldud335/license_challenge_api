@@ -11,7 +11,6 @@ import {
   getAchievementRate,
   enterChallenge,
   updateChallenge,
-  refundChallengeDeposit,
   refundChallengeBonus,
   createProofPicture,
   getProofPicture,
@@ -100,11 +99,12 @@ challengeRouter.post("/:challengeId/refund-bonus",
 );
 
 //챌린지 보증금 자동환급_출석
-schedule.scheduleJob('0 0 3 * * *', () => {
+schedule.scheduleJob('0 0 0 * * *', () => {
   refundDeposit_Auto()
 });
 
-//챌린지 보증금 자동환급_출석
+
+//챌린지 인증 성공여부 자동 체크
 schedule.scheduleJob('0 0 0 * * *', () => {
   proofCountAuto()
 });

@@ -52,7 +52,7 @@ export const searchChallenge = "\
     ORDER BY    challengeCreateDt DESC LIMIT "
 
 export const getAchievementRate = "\
-    SELECT      C.challengeId, C.challengeTitle, J.successCnt, J.failCnt, \
+    SELECT      C.challengeId, C.challengeTitle, J.successCnt, J.failCnt, J.refund_deposit, J.refund_bonus, \
                 IFNULL(ROUND((J.successCnt/(J.successCnt+J.failCnt))*100),0) AS achievement_rate, \
                 J.pass, J.passImage \
     FROM        challenge C, join_challenge J \
@@ -61,6 +61,7 @@ export const getAchievementRate = "\
 export const enterChallenge_leader = "INSERT INTO join_challenge(challengeId, userId, successCnt, failCnt, pass) VALUES (?,?,0,0,0)"
 export const enterChallenge_challenger = "INSERT INTO join_challenge(challengeId, userId, successCnt, failCnt, pass) VALUES (?,?,0,0,0);"
 export const plusJoinPeople = "UPDATE challenge SET joinPeople = joinPeople+1, balance_deposit = balance_deposit+deposit WHERE challengeId = ?;"
+export const minusJoinPeople = "UPDATE challenge SET joinPeople = joinPeople-1, balance_deposit = balance_deposit-deposit WHERE challengeId = ?;"
 export const getChallengeEndDt = "SELECT chgEndDt FROM challenge WHERE challengeId=?"
 export const createProofPicture = "INSERT INTO proof_picture(challengeId, userId, proofImage, dailyReview, reportCnt, proof) VALUES(?, ?, ?, ?, 0, 0)"
 export const getProofPicture = "SELECT pictureId, proofImage FROM proof_picture WHERE challengeId = ? ORDER BY proofDt DESC LIMIT "
@@ -99,7 +100,7 @@ export const getEndedUsers = "\
 
 export const successDepositRefund = "UPDATE join_challenge SET refund_deposit = 1 WHERE challengeId = ? AND userId = ?"
 export const successDepositRefund2 = "UPDATE challenge SET refund = 1, balance_deposit = balance_deposit-? WHERE challengeId = ?"
-export const successBonusRefund = "UPDATE join_challenge SET refund_bonus = 1 WHERE challengeId = ? AND userId = ?"
+export const successBonusRefund = "UPDATE join_challenge SET refund_bonus = ? WHERE challengeId = ? AND userId = ?"
 
 export const checkBonus = "\
     SELECT  refund_bonus, IF((pass = 1 AND achievement_rate>95) OR achievement_rate =100 ,1,0) AS bonus_check \
